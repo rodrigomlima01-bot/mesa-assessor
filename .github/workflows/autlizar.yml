@@ -1,0 +1,68 @@
+name: Atualizar radar e publicar
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 10 * * 1-5'   # 07:00 em Brasília, de segunda a sexta
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  atualizar-e-publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Atualizar dados
+        id: atualizar
+        if: github.event_name != 'push'
+        continue-on-error: true
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node atualizar.mjs
+
+      - name: Salvar dados no repositório
+        if: github.event_name != 'push'
+        run: |
+          git config user.name "radar-bot"
+          git config user.email "radar-bot@users.noreply.github.com"
+          git add dados.json
+          git diff --cached --quiet || git commit -m "Atualiza radar"
+          git push
+
+      - name: Montar site
+        run: |
+          mkdir _site
+          cp index.html dados.json _site/
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Publicar
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Avisar se a atualização teve problema
+        if: steps.atualizar.outcome == 'failure'
+        run: |
+          echo "A atualização teve problemas. Abra o passo 'Atualizar dados' acima para ver os detalhes."
+          exit 1
