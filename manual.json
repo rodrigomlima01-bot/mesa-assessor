@@ -1,0 +1,126 @@
+{
+  "_ajuda": "Edite este arquivo para atualizar os dados que o robô não busca sozinho: refExtra (Ibovespa, Fed, BCE, Brent) e cal (calendário). Datas no formato AAAA-MM-DD, horário de Brasília. s = importância de 1 a 3.",
+  "refExtra": [
+    {
+      "l": "Ibovespa",
+      "v": "168.385 pts",
+      "d": "fechamento de 06/11, +1,33%"
+    },
+    {
+      "l": "Fed (EUA)",
+      "v": "3,75% a 4,00%",
+      "d": "mantido em 28/10"
+    },
+    {
+      "l": "BCE (depósito)",
+      "v": "2,5%",
+      "d": "mantido em 29/10"
+    },
+    {
+      "l": "Petróleo Brent",
+      "v": "cerca de US$ 98",
+      "d": "05/11, durante o pregão"
+    }
+  ],
+  "cal": [
+    {
+      "data": "2026-11-09",
+      "h": "08:00",
+      "p": "Brasil",
+      "e": "IGP-DI de outubro",
+      "s": 1,
+      "a": "Setembro: +1,50%",
+      "w": "Índice de preços da FGV que reajusta contratos, como aluguéis."
+    },
+    {
+      "data": "2026-11-09",
+      "h": "08:30",
+      "p": "Brasil",
+      "e": "Boletim Focus",
+      "s": 2,
+      "a": "",
+      "w": "Mostra o que o mercado espera para Selic, IPCA, câmbio e PIB. Serve de termômetro para as conversas sobre juros."
+    },
+    {
+      "data": "2026-11-10",
+      "h": "08:00",
+      "p": "Brasil",
+      "e": "Ata do Copom",
+      "s": 3,
+      "a": "Selic mantida em 13,75%",
+      "w": "Explica por que o BC manteve os juros e qual é o tom para as próximas reuniões. Mexe com juros futuros, bolsa e dólar."
+    },
+    {
+      "data": "2026-11-10",
+      "h": "10:30",
+      "p": "EUA",
+      "e": "CPI (inflação ao consumidor) de outubro",
+      "s": 3,
+      "a": "Setembro: +0,6% no mês, +3,7% em 12 meses; núcleo +0,3% no mês, +2,6% no ano",
+      "w": "Inflação alta pode levar o Fed a subir juros. Isso afeta dólar e bolsas no mundo todo."
+    },
+    {
+      "data": "2026-11-11",
+      "h": "09:00",
+      "p": "Brasil",
+      "e": "Volume de serviços de setembro",
+      "s": 1,
+      "a": "Agosto: -0,1% no mês",
+      "w": "Mede a atividade do setor de serviços, o maior da economia."
+    },
+    {
+      "data": "2026-11-11",
+      "h": "14:30",
+      "p": "Brasil",
+      "e": "Fluxo cambial semanal",
+      "s": 1,
+      "a": "Última semana: saldo positivo de US$ 9,498 bi",
+      "w": "Mostra se entrou ou saiu dólar do país, o que ajuda a explicar o câmbio."
+    },
+    {
+      "data": "2026-11-12",
+      "h": "09:00",
+      "p": "Brasil",
+      "e": "IPCA de outubro",
+      "s": 3,
+      "a": "Setembro: +0,82% no mês, +4,58% em 12 meses",
+      "w": "É a inflação oficial. Define o ganho real do cliente, corrige o Tesouro IPCA+ e influencia a Selic."
+    },
+    {
+      "data": "2026-11-12",
+      "h": "10:30",
+      "p": "EUA",
+      "e": "Pedidos de seguro-desemprego",
+      "s": 2,
+      "a": "Iniciais: 189 mil",
+      "w": "Termômetro semanal do emprego americano, que pesa nas apostas sobre os juros dos EUA."
+    },
+    {
+      "data": "2026-11-13",
+      "h": "07:00",
+      "p": "Zona do Euro",
+      "e": "PIB do 3º trimestre (prévia)",
+      "s": 2,
+      "a": "2º trimestre: +0,4% sobre o trimestre anterior, +1,3% em 12 meses",
+      "w": "Mostra se a economia europeia aguenta o choque de energia, o que pesa nas decisões do BCE."
+    },
+    {
+      "data": "2026-11-13",
+      "h": "09:00",
+      "p": "Brasil",
+      "e": "Vendas no varejo de setembro",
+      "s": 2,
+      "a": "Agosto: +0,1% no mês, +0,4% em 12 meses",
+      "w": "Indica a força do consumo, que influencia os juros e as ações do varejo."
+    },
+    {
+      "data": "2026-11-13",
+      "h": "10:30",
+      "p": "EUA",
+      "e": "PPI (inflação ao produtor) de outubro",
+      "s": 2,
+      "a": "",
+      "w": "Inflação na cadeia de produção, que costuma chegar depois ao consumidor."
+    }
+  ]
+}

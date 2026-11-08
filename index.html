@@ -1,0 +1,1045 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mesa do Assessor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: faixa de premissas no topo, abas, e duas colunas (entrada | resultado) que empilham no celular */
+:root{
+  --bg:#EDF1F0; --surface:#FFFFFF; --surface-2:#F4F7F6; --ink:#10201E; --muted:#56635F; --line:#D3DCD9;
+  --accent:#0A5C56; --accent-ink:#FFFFFF; --accent-soft:#DDEFEC;
+  --warn:#8F4F00; --warn-soft:#FBEBD3; --good:#1B6E44; --good-soft:#DCF0E4; --bad:#A92A22; --bad-soft:#F8DEDB;
+  --s-inv:#7B8B87; --s-net:#0A5C56; --s-real:#3A6EA5; --goal:#C0572B;
+  --c1:#0A5C56; --c2:#C0572B; --c3:#3A6EA5; --c4:#A07A12; --c5:#7A4B8C; --c6:#5E7A3A; --c7:#B03A5B; --c8:#4B5563; --c9:#2F8F9D; --c10:#8A5A44; --c11:#5C6BC0; --c12:#2E8B57; --c13:#B5791D; --c14:#6B7A86; --c10:#8C5A2B; --c11:#3F7F5F; --c12:#6B6BB5;
+  --font-display:"Bricolage Grotesque",system-ui,sans-serif;
+  --font-body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D1514; --surface:#141E1D; --surface-2:#192524; --ink:#E4EEEB; --muted:#93A39F; --line:#263634;
+  --accent:#46BDB0; --accent-ink:#06201D; --accent-soft:#17312E;
+  --warn:#E3A24B; --warn-soft:#33260F; --good:#5CCB92; --good-soft:#10291D; --bad:#F08A80; --bad-soft:#341716;
+  --s-inv:#8A9B97; --s-net:#46BDB0; --s-real:#6FA3DB; --goal:#F08A5B;
+  --c1:#46BDB0; --c2:#F08A5B; --c3:#6FA3DB; --c4:#D9B24A; --c5:#B98BD0; --c6:#94BE6A; --c7:#E57C9B; --c8:#A3ADB9; --c9:#5FC3D1; --c10:#C79A82; --c11:#8E9BE6; --c12:#5CC28B; --c13:#E0A060; --c14:#9AA7B3; --c10:#C79A66; --c11:#7CC9A0; --c12:#A5A5E8;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0D1514; --surface:#141E1D; --surface-2:#192524; --ink:#E4EEEB; --muted:#93A39F; --line:#263634;
+  --accent:#46BDB0; --accent-ink:#06201D; --accent-soft:#17312E;
+  --warn:#E3A24B; --warn-soft:#33260F; --good:#5CCB92; --good-soft:#10291D; --bad:#F08A80; --bad-soft:#341716;
+  --s-inv:#8A9B97; --s-net:#46BDB0; --s-real:#6FA3DB; --goal:#F08A5B;
+  --c1:#46BDB0; --c2:#F08A5B; --c3:#6FA3DB; --c4:#D9B24A; --c5:#B98BD0; --c6:#94BE6A; --c7:#E57C9B; --c8:#A3ADB9; --c9:#5FC3D1; --c10:#C79A82; --c11:#8E9BE6; --c12:#5CC28B; --c13:#E0A060; --c14:#9AA7B3; --c10:#C79A66; --c11:#7CC9A0; --c12:#A5A5E8;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+.kpi .unit{font-family:var(--font-body);font-size:15px;font-weight:500;letter-spacing:0;color:var(--muted)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.5;
+  padding-block:0 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1180px;margin:0 auto}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--font-display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+h1{font-size:clamp(28px,4.2vw,40px);line-height:1.02;font-weight:700}
+h2{font-size:19px;font-weight:700}
+h3{font-size:15px;font-weight:700}
+p{margin:0}
+.top{display:flex;flex-wrap:wrap;gap:6px 24px;align-items:baseline;justify-content:space-between;padding-block:28px 14px}
+.top .sub{color:var(--muted);max-width:52ch}
+.aviso{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--muted);margin-bottom:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;min-width:0}
+.stack{display:flex;flex-direction:column;gap:16px;min-width:0}
+.cols{display:grid;grid-template-columns:minmax(0,350px) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:900px){.cols{grid-template-columns:minmax(0,1fr)}}
+
+.prem{margin-bottom:16px}
+.prem-head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.prem-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) minmax(0,1.6fr);gap:12px;align-items:end}
+@media (max-width:900px){.prem-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.prem-grid .toggle{grid-column:1/-1}}
+.hint{font-size:13px;color:var(--muted);margin-top:10px}
+
+nav.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}
+nav.tabs a{padding:10px 16px;text-decoration:none;color:var(--muted);font-weight:500;border-bottom:2px solid transparent;white-space:nowrap}
+nav.tabs a.on{color:var(--ink);border-bottom-color:var(--accent)}
+nav.tabs a:hover{color:var(--ink)}
+
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field[hidden],.row2[hidden]{display:none}
+.field>label,.lbl{font-size:13px;color:var(--muted);font-weight:500}
+input[type=number],input[type=text],select{width:100%;min-width:0;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);
+  border-radius:6px;padding:9px 10px;font:inherit;font-family:var(--font-mono);font-size:14px}
+select,input[type=text]{font-family:var(--font-body)}
+input:disabled{opacity:.55}
+.row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.form{display:flex;flex-direction:column;gap:14px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{padding:9px 6px;text-align:center;font-size:13px;font-weight:500;cursor:pointer;background:var(--surface-2);color:var(--muted)}
+.seg input:checked+label{background:var(--accent);color:var(--accent-ink)}
+.seg input:focus-visible+label{outline:2px solid var(--accent);outline-offset:-2px}
+.toggle{display:flex;gap:8px;align-items:center;font-size:14px;cursor:pointer}
+.toggle input{width:18px;height:18px;accent-color:var(--accent)}
+.note{font-size:13px;color:var(--muted)}
+.btn{font:inherit;font-weight:500;font-size:14px;border-radius:6px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);padding:8px 12px;cursor:pointer}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn:disabled{opacity:.6;cursor:default}
+.linkbtn{font:inherit;background:none;border:0;padding:0;color:var(--accent);cursor:pointer;text-align:left;text-decoration:underline;text-underline-offset:3px}
+
+.pill{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600;white-space:nowrap}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.good{background:var(--good-soft);color:var(--good)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.neutral{background:var(--accent-soft);color:var(--accent)}
+
+.kpi-label{font-size:13px;color:var(--muted);font-weight:500}
+.kpi{font-family:var(--font-display);font-weight:700;font-size:clamp(30px,5.4vw,46px);line-height:1.05;letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin:4px 0 8px;overflow-wrap:anywhere}
+.kpi-row{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.renda-line{margin-top:10px;padding:10px 12px;background:var(--accent-soft);border-radius:8px;font-size:14px}
+.renda-line strong{font-family:var(--font-mono);font-weight:500}
+.dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px 18px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.dl div{min-width:0}
+.dl dt{font-size:12px;color:var(--muted);font-weight:500}
+.dl dd{margin:0;font-family:var(--font-mono);font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:18px;height:0;border-top:3px solid;vertical-align:middle;margin-right:6px}
+svg.chart{width:100%;height:auto;display:block}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .ax{fill:var(--muted);font:11px var(--font-mono)}
+.chart .l-inv{fill:none;stroke:var(--s-inv);stroke-width:2;stroke-dasharray:5 4}
+.chart .l-net{fill:none;stroke:var(--s-net);stroke-width:2.5}
+.chart .l-real{fill:none;stroke:var(--s-real);stroke-width:2;stroke-dasharray:2 3}
+.chart .a-net{fill:var(--s-net);opacity:.12}
+.chart .l-goal{stroke:var(--goal);stroke-width:1.5;stroke-dasharray:6 4}
+.chart .t-goal{fill:var(--goal);font:600 11px var(--font-body)}
+.chart .dot{fill:var(--s-net);stroke:var(--surface);stroke-width:2}
+.chart .t-end{fill:var(--ink);font:500 12px var(--font-mono)}
+
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;font-weight:600;padding:6px 10px 6px 0;white-space:nowrap}
+td{padding:9px 10px 9px 0;border-top:1px solid var(--line);font-size:14px;vertical-align:top}
+th.num,td.num{text-align:right;font-family:var(--font-mono);padding-right:0;padding-left:10px;white-space:nowrap}
+th.num+th,td.num+td{padding-left:16px}
+tr.sel td{background:var(--accent-soft)}
+tr.sel td:first-child{padding-left:8px}
+.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:8px;vertical-align:baseline}
+
+.fala{white-space:pre-wrap;font-family:var(--font-body);font-size:14px;line-height:1.55;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:14px;margin:12px 0 0;overflow-wrap:anywhere}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between}
+.alloc{display:flex;height:16px;border-radius:4px;overflow:hidden;margin:12px 0 4px;background:var(--surface-2)}
+.alloc span{display:block;height:100%}
+.al{display:flex;gap:10px;align-items:baseline;padding:9px 0;border-top:1px solid var(--line)}
+.al:first-child{border-top:0}
+ul.clean{list-style:none;margin:0;padding:0}
+.cart-row{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) auto;gap:8px;align-items:center}
+.ex{background:var(--warn-soft);color:var(--warn);border-radius:8px;padding:10px 14px;font-size:13px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
+.ex[hidden]{display:none}
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.ativo dl{margin:12px 0 0;display:flex;flex-direction:column;gap:10px}
+.ativo dt{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.ativo dd{margin:2px 0 0;font-size:14px}
+.ativo .falar{background:var(--accent-soft);border-radius:8px;padding:10px 12px}
+.sec-title{display:flex;flex-direction:column;gap:2px;margin:6px 0 12px}
+.stars{color:var(--warn);letter-spacing:2px;font-size:14px;white-space:nowrap}
+.stars .off{color:var(--line)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:inherit;font-size:13px;font-weight:500;padding:6px 12px;border-radius:99px;border:1px solid var(--line);background:var(--surface-2);color:var(--muted);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.dl .note{display:block;margin-top:2px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:12px}
+.rules h3{margin-bottom:4px}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="top">
+    <h1>Mesa do Assessor</h1>
+    <p class="sub">Simule o plano do cliente, a renda mensal e prepare a conversa. Taxas editáveis, resultado sempre como estimativa.</p>
+  </header>
+
+  <p class="aviso">Material de apoio ao assessor, não é recomendação personalizada. Projeções usam premissas editáveis e não garantem rentabilidade ou renda. Valide com o compliance da BLUE3 antes de mostrar a um cliente ou publicar nas redes. Os dados ficam salvos só neste navegador.</p>
+
+  <section class="card prem" aria-label="Premissas de mercado">
+    <div class="prem-head">
+      <h2>Premissas de mercado</h2>
+      <span id="premStatus" class="pill warn"></span>
+    </div>
+    <div class="prem-grid">
+      <div class="field"><label for="selic">Selic (% a.a.)</label><input type="number" id="selic" step="0.01" inputmode="decimal"></div>
+      <div class="field"><label for="cdi">CDI (% a.a.)</label><input type="number" id="cdi" step="0.01" inputmode="decimal"></div>
+      <div class="field"><label for="ipca">IPCA 12 meses (%)</label><input type="number" id="ipca" step="0.01" inputmode="decimal"></div>
+      <div class="field"><label for="dolar">Dólar (R$)</label><input type="number" id="dolar" step="0.01" inputmode="decimal"></div>
+      <label class="toggle"><input type="checkbox" id="real"> Mostrar em valores de hoje (descontar IPCA)</label>
+    </div>
+    <p class="hint">Os números iniciais são só de referência. Preencha com os valores atuais e eles ficam salvos. Para conferir: <a href="https://www.bcb.gov.br/controleinflacao/taxaselic" target="_blank" rel="noopener">Banco Central</a>, <a href="https://www.ibge.gov.br/explica/inflacao.php" target="_blank" rel="noopener">IBGE</a> e o <a href="https://www.investing.com/economic-calendar/" target="_blank" rel="noopener">calendário do Investing</a>.</p>
+  </section>
+
+  <nav class="tabs" aria-label="Seções">
+    <a id="t-radar" href="#radar">Radar</a>
+    <a id="t-simulador" href="#simulador">Simulador</a>
+    <a id="t-ficha" href="#ficha">Ficha do cliente</a>
+    <a id="t-ativos" href="#ativos">Ativos e premissas</a>
+  </nav>
+
+  <!-- RADAR -->
+  <section id="v-radar" hidden>
+    <div class="stack" id="rdOut"></div>
+  </section>
+
+  <!-- SIMULADOR -->
+  <section id="v-simulador" hidden>
+    <div class="cols">
+      <div class="card form" id="simIn">
+        <h2>Plano do cliente</h2>
+        <div class="seg" role="radiogroup" aria-label="Tipo de cálculo">
+          <input type="radio" name="simMode" id="mFv" value="fv"><label for="mFv">Quanto terei</label>
+          <input type="radio" name="simMode" id="mPmt" value="pmt"><label for="mPmt">Quanto aportar</label>
+        </div>
+        <div class="field"><label for="simK">Onde o dinheiro fica</label><select id="simK"></select></div>
+        <div class="field"><label for="simParam" id="simParamLbl">Taxa</label><input type="number" id="simParam" step="0.01" inputmode="decimal"><span class="note" id="simRateTxt"></span></div>
+        <div class="row2">
+          <div class="field"><label for="simP">Aporte inicial (R$)</label><input type="number" id="simP" min="0" step="100" inputmode="decimal"></div>
+          <div class="field"><label for="simPMT">Aporte mensal (R$)</label><input type="number" id="simPMT" min="0" step="50" inputmode="decimal"></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="simPrazo">Prazo</label><input type="number" id="simPrazo" min="1" step="1" inputmode="numeric"></div>
+          <div class="field"><label for="simUnit">Unidade</label><select id="simUnit"><option value="a">anos</option><option value="m">meses</option></select></div>
+        </div>
+        <div class="row2" id="simGoalRow">
+          <div class="field"><label for="simGoal">Objetivo</label><input type="number" id="simGoal" min="0" step="1000" inputmode="decimal"></div>
+          <div class="field"><label for="simCur">Moeda do objetivo</label><select id="simCur"><option value="BRL">R$</option><option value="USD">US$</option></select></div>
+        </div>
+        <div class="field"><label for="simRenda">Renda mensal desejada (R$, opcional)</label><input type="number" id="simRenda" min="0" step="500" inputmode="decimal"></div>
+        <div class="field" id="simShockWrap"><label for="simShock">Teste de estresse: retorno do 1º ano (%)</label><input type="number" id="simShock" step="1" inputmode="decimal"></div>
+        <p class="note" id="simNote"></p>
+        <p class="note" id="simIr"></p>
+      </div>
+      <div class="stack" id="simOut"></div>
+    </div>
+  </section>
+
+  <!-- FICHA -->
+  <section id="v-ficha" hidden>
+    <div class="cols">
+      <div class="stack">
+        <div class="ex" id="exBanner"><span>Dados de exemplo. Substitua pelos dados do cliente.</span><button class="btn" id="fBlank" type="button">Começar em branco</button></div>
+        <div class="card form">
+          <h2>Ficha do cliente</h2>
+          <div class="row2">
+            <div class="field"><label for="fNome">Apelido do cliente</label><input type="text" id="fNome" autocomplete="off"></div>
+            <div class="field"><label for="fIdade">Idade</label><input type="number" id="fIdade" min="0" step="1" inputmode="numeric"></div>
+          </div>
+          <div class="row2">
+            <div class="field"><label for="fPerfil">Perfil (suitability)</label>
+              <select id="fPerfil"><option value="conservador">Conservador</option><option value="moderado">Moderado</option><option value="arrojado">Arrojado</option><option value="nd">Não definido</option></select></div>
+            <div class="field"><label for="fLiq">Precisa do dinheiro</label>
+              <select id="fLiq"><option value="imediata">A qualquer momento</option><option value="medio">Em 1 a 3 anos</option><option value="longo">Só no longo prazo</option></select></div>
+          </div>
+          <div class="field"><label for="fObj">Objetivo em palavras</label><input type="text" id="fObj" autocomplete="off"></div>
+          <div class="row2">
+            <div class="field"><label for="fGoal">Valor do objetivo</label><input type="number" id="fGoal" min="0" step="1000" inputmode="decimal"></div>
+            <div class="field"><label for="fCur">Moeda</label><select id="fCur"><option value="BRL">R$</option><option value="USD">US$</option></select></div>
+          </div>
+          <div class="row2">
+            <div class="field"><label for="fPrazo">Prazo desejado (anos)</label><input type="number" id="fPrazo" min="1" step="1" inputmode="numeric"></div>
+            <div class="field"><label for="fRenda">Renda mensal desejada (R$)</label><input type="number" id="fRenda" min="0" step="500" inputmode="decimal"></div>
+          </div>
+          <div class="field"><span class="lbl">Carteira atual</span><div class="form" id="cartRows" style="gap:8px"></div>
+            <div><button class="btn" id="addRow" type="button">Adicionar ativo</button></div></div>
+          <div class="row2">
+            <div class="field"><label for="fNovo">Novo dinheiro agora (R$)</label><input type="number" id="fNovo" min="0" step="1000" inputmode="decimal"></div>
+            <div class="field"><label for="fPmt">Aporte mensal (R$)</label><input type="number" id="fPmt" min="0" step="50" inputmode="decimal"></div>
+          </div>
+          <div class="field"><label for="fDest">Destino do novo dinheiro e dos aportes</label><select id="fDest"></select></div>
+        </div>
+      </div>
+      <div class="stack">
+        <div id="fOut" class="stack"></div>
+        <div class="card" id="aiCard">
+          <div class="head"><h2>Análise da IA</h2><button class="btn primary" id="aiBtn" type="button">Pedir análise da IA</button></div>
+          <p class="note" style="margin-top:6px">Gera um roteiro de conversa com base nesta ficha. Não envia o apelido do cliente. Não indica compra de ativo específico.</p>
+          <div class="fala" id="aiOut" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ATIVOS -->
+  <section id="v-ativos" hidden>
+    <div class="stack">
+      <div class="card">
+        <div class="sec-title"><h2>Premissas por classe de ativo</h2><p class="note">Usadas no simulador e na ficha. Os valores iniciais são exemplos, exceto a coluna de referência, que vem do material que você trouxe. Retorno de ações e FII é cenário para testar, nunca previsão.</p></div>
+        <div class="scroll"><table id="paramTbl"></table></div>
+      </div>
+      <div class="card">
+        <h2>Três cuidados com renda variável</h2>
+        <div class="rules">
+          <div><h3>Não anda em linha reta</h3><p class="note">Um retorno médio de 11% ao ano pode vir de anos muito bons e anos negativos. A média só se consolida no longo prazo, em geral acima de 5 a 10 anos. O simulador mostra um cenário com oscilação e outro com queda no último ano.</p></div>
+          <div><h3>Inflação come o ganho</h3><p class="note">Retorno nominal de 12% não é 12% de poder de compra. Ligue "Mostrar em valores de hoje" para ver o ganho real. O material de referência fala em ganho real de 6% a 7% ao ano para o Ibovespa.</p></div>
+          <div><h3>Dólar puro ou ativos em dólar</h3><p class="note">O dólar sozinho não paga juros. Para simular crescimento em moeda forte, use ações americanas como o S&amp;P 500, com referência de 8% a 10% ao ano em dólar, e some a variação do câmbio.</p></div>
+        </div>
+        <p class="hint">Cuidado com a faixa de 12% a 14% para ações individuais. Ela supõe que a carteira vença o índice, e a maioria dos gestores ativos não vence no longo prazo. Use como cenário otimista, não como base.</p>
+      </div>
+      <div class="sec-title"><h2>Como explicar cada classe</h2><p class="note">Resumo de apoio. Confirme sempre a regra tributária vigente e a política da XP e da BLUE3 para o que você pode oferecer.</p></div>
+      <div class="grid-cards" id="ativoCards"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+'use strict';
+var KEY='mesa-assessor-v1';
+/* pay: m = rendimento mensal, s = cupom semestral, dy = proventos variáveis, 0 = não distribui renda
+   pbase: full = paga a taxa inteira, real = paga só a parte real (inflação fica no principal) */
+var CL=[
+ {k:'cdb',nome:'CDB / RDB pós-fixado',tipo:'cdi',def:100,unit:'% do CDI',ir:'reg',risco:'Baixo',pay:'m',pbase:'full'},
+ {k:'lci',nome:'LCI / LCA',tipo:'cdi',def:92,unit:'% do CDI',ir:'isento',risco:'Baixo',pay:'m',pbase:'full'},
+ {k:'tsel',nome:'Tesouro Selic',tipo:'selic',def:100,unit:'% da Selic',ir:'reg',risco:'Baixo',pay:'m',pbase:'full'},
+ {k:'tipca',nome:'Tesouro IPCA+',tipo:'ipca',def:7,unit:'IPCA + % a.a.',ir:'reg',risco:'Médio',pay:'s',pbase:'real',infl:true},
+ {k:'deb',nome:'Debênture incentivada',tipo:'ipca',def:6.5,unit:'IPCA + % a.a.',ir:'isento',risco:'Médio',pay:'s',pbase:'real',infl:true},
+ {k:'debc',nome:'Debênture comum',tipo:'cdis',def:2,unit:'CDI + % a.a.',ir:'reg',risco:'Médio',pay:'s',pbase:'full'},
+ {k:'cri',nome:'CRI / CRA',tipo:'ipca',def:7.5,unit:'IPCA + % a.a.',ir:'isento',risco:'Médio',pay:'m',pbase:'real',infl:true},
+ {k:'pre',nome:'Prefixado (CDB / Tesouro)',tipo:'fixa',def:13.5,unit:'% a.a.',ir:'reg',risco:'Médio',pay:'s',pbase:'full'},
+ {k:'fii',nome:'Fundos imobiliários (FII)',tipo:'fixa',def:11,unit:'retorno total, % a.a.',ir:'fii',risco:'Alto',pay:'dy',vol:true,
+   nota:'O retorno total soma o rendimento mensal (DY) e a variação da cota. O DY informado na aba de premissas vira a renda mensal, e o valor muda todo mês.'},
+ {k:'ibov',nome:'Ibovespa (ETF)',tipo:'fixa',def:11,unit:'retorno nominal, % a.a.',ir:'rv',risco:'Alto',pay:'0',vol:true,
+   nota:'Referência usada: 10% a 12% ao ano nominal no longo prazo, ou 6% a 7% acima da inflação. ETFs de índice costumam reinvestir os proventos.'},
+ {k:'acoes',nome:'Ações individuais',tipo:'fixa',def:13,unit:'retorno total, % a.a.',ir:'rv',risco:'Alto',pay:'dy',vol:true,
+   nota:'Referência usada: 12% a 14% ao ano para uma carteira bem selecionada, com foco em dividendos ou empresas consolidadas. O retorno inclui os dividendos informados nas premissas.'},
+ {k:'sp500',nome:'S&P 500 / ações EUA (ETF)',tipo:'usd',def:9,unit:'retorno em US$, % a.a.',ir:'rv',risco:'Alto',pay:'0',vol:true,
+   nota:'Referência usada: 8% a 10% ao ano em dólar no longo prazo. O cálculo soma a valorização do dólar informada na linha Dólar. Em vez de simular só a alta do dólar, simule ativos em dólar.'},
+ {k:'dolar',nome:'Dólar (moeda)',tipo:'fixa',def:4.5,unit:'valorização, % a.a.',ir:'rv',risco:'Alto',pay:'0',vol:true,
+   nota:'O dólar não rende juros. A taxa é só a valorização esperada frente ao real, ligada à diferença de inflação entre Brasil e EUA, referência de 4% a 5% ao ano. IOF e spread da compra não estão incluídos.'},
+ {k:'poup',nome:'Poupança',tipo:'fixa',def:6.17,unit:'% a.a.',ir:'isento',risco:'Baixo',pay:'m',pbase:'full'}
+];
+var CK={}; CL.forEach(function(c,i){CK[c.k]=c; c.i=i+1;});
+var IRTXT={
+ reg:'IR regressivo sobre o rendimento: 22,5% até 180 dias, 20% até 360, 17,5% até 720 e 15% acima. Calculado aporte por aporte.',
+ isento:'Isento de IR para pessoa física (confirme a regra vigente).',
+ fii:'Rendimentos mensais isentos para pessoa física em regra. O IR de 20% sobre ganho de capital na venda das cotas não está incluído.',
+ rv:'IR de 15% sobre o ganho na venda. Para ações existe isenção em vendas de até R$ 20 mil por mês, que não foi considerada. ETFs e moeda não têm essa isenção.'
+};
+var ATIVOS=[
+ {k:'cdb',oque:'Empréstimo ao banco. Rende um percentual do CDI, uma taxa fixa ou IPCA mais uma taxa.',renda:'O rendimento acumula no título. Para ter renda mensal, o cliente resgata parte do rendimento, se o título permitir resgate parcial.',ir:'Regressivo: 22,5% até 180 dias, 20% de 181 a 360, 17,5% de 361 a 720 e 15% acima de 720.',liq:'Depende do título: diária ou só no vencimento.',risco:'Crédito do banco. O FGC cobre até R$ 250 mil por CPF por instituição.',falar:'Você empresta ao banco e ele paga juros. Quanto maior o prazo, menor o imposto.'},
+ {k:'lci',oque:'Letra emitida por banco com lastro em crédito imobiliário (LCI) ou do agronegócio (LCA).',renda:'Em geral acumula até o vencimento. Renda mensal exige resgate parcial, e muitas têm carência.',ir:'Isenta de IR para pessoa física.',liq:'Em geral com carência. Os prazos mínimos variam.',risco:'Crédito do banco, com o mesmo limite do FGC.',falar:'Parecido com o CDB, sem imposto de renda. Compare pela taxa líquida, não pelo percentual do CDI.'},
+ {k:'tsel',oque:'Título público que acompanha a taxa Selic.',renda:'Não paga cupom. Para ter renda, o cliente resgata parte do saldo.',ir:'Regressivo, igual ao CDB, mais taxa de custódia da B3 de 0,20% a.a.',liq:'Resgate em D+1 em dias úteis.',risco:'Risco do governo. O preço oscila pouco se vender antes do vencimento.',falar:'É dinheiro emprestado ao governo, com liquidez. Serve bem para reserva.'},
+ {k:'tipca',oque:'Título público que paga a inflação (IPCA) mais uma taxa fixa definida na compra.',renda:'A versão com juros semestrais paga cupom a cada 6 meses sobre o valor corrigido pelo IPCA. A versão comum não paga cupom e acumula até o vencimento.',ir:'Regressivo, igual ao CDB, também sobre cada cupom.',liq:'Resgate em D+1, mas o preço oscila (marcação a mercado).',risco:'Vender antes do vencimento pode render menos do que a taxa contratada.',falar:'Protege o poder de compra no longo prazo e, na versão com cupom, gera uma renda que acompanha a inflação.'},
+ {k:'deb',oque:'Títulos de empresas para financiar infraestrutura, geralmente IPCA mais uma taxa.',renda:'Costuma pagar cupom semestral, às vezes mensal, conforme a emissão. Confira o fluxo na escritura.',ir:'Isentas de IR para pessoa física.',liq:'Baixa. Vender antes do vencimento depende de haver comprador.',risco:'Crédito da empresa emissora. Sem cobertura do FGC.',falar:'Rende mais porque o cliente assume o risco de crédito da empresa. Isso precisa ficar claro.'},
+ {k:'debc',oque:'Títulos de dívida de empresas sem o benefício fiscal. Em geral pagam CDI mais uma taxa ou um percentual do CDI.',renda:'Costuma pagar juros periódicos, em geral semestrais, conforme a emissão. Confira o fluxo na escritura.',ir:'Regressivo sobre o rendimento, de 22,5% a 15%, como o CDB. Não é isenta (confirme a regra vigente).',liq:'Baixa. Vender antes do vencimento depende de haver comprador.',risco:'Crédito da empresa emissora. Sem cobertura do FGC.',falar:'A taxa maior paga o risco de crédito. Como não é isenta, compare a taxa líquida com as incentivadas.'},
+ {k:'cri',oque:'Títulos lastreados em créditos imobiliários (CRI) ou do agronegócio (CRA).',renda:'Muitos pagam juros mensais. Confira o fluxo de cada emissão.',ir:'Isentos de IR para pessoa física.',liq:'Baixa. A negociação antes do vencimento é limitada.',risco:'Crédito do devedor e da estrutura da operação. Sem cobertura do FGC.',falar:'É uma forma de gerar renda mensal isenta de IR, com risco de crédito que o cliente precisa entender.'},
+ {k:'pre',oque:'Taxa definida na compra, em CDB ou Tesouro Prefixado.',renda:'O Tesouro Prefixado com juros semestrais paga cupom a cada 6 meses. O Tesouro Prefixado comum não paga cupom.',ir:'Regressivo, igual ao CDB, também sobre cada cupom.',liq:'Depende do título.',risco:'Se os juros sobem depois da compra, o preço cai e vender antes pode dar prejuízo.',falar:'O cliente sabe quanto recebe no vencimento. Se sair antes, o valor pode ser menor.'},
+ {k:'fii',oque:'Cotas de fundos que investem em imóveis, recebíveis ou outros fundos, negociadas na bolsa.',renda:'Os fundos distribuem rendimentos, na maioria mensais. A lei exige distribuir ao menos 95% do resultado de caixa a cada semestre. O valor muda de mês a mês.',ir:'Rendimentos mensais isentos para pessoa física em regra, se o fundo cumprir as condições da lei. Ganho na venda das cotas: 20%.',liq:'Alta na bolsa em dias úteis, mas o preço varia.',risco:'Preço da cota oscila. Vacância, inadimplência e juros altos pesam. O rendimento mensal não é fixo.',falar:'O cliente vira sócio de um conjunto de imóveis ou dívidas e recebe uma renda mensal variável.'},
+ {k:'ibov',oque:'ETF que replica o Ibovespa e dá exposição a várias ações com uma única compra.',renda:'ETFs de índice costumam reinvestir os proventos. A renda vem da venda de cotas. Confira no regulamento de cada ETF.',ir:'15% sobre o ganho na venda das cotas, sem a isenção de R$ 20 mil por mês que existe para ações.',liq:'Alta na bolsa em dias úteis.',risco:'Oscila com o mercado. Um ano pode render +30% e o seguinte −15%. A média só aparece no longo prazo.',falar:'Referência de 10% a 12% ao ano nominal no longo prazo, ou 6% a 7% acima da inflação. Nenhum ano é garantido.'},
+ {k:'acoes',oque:'Participação em empresas listadas na B3.',renda:'Dividendos e JCP, em geral trimestrais ou semestrais. O valor varia e pode ser reduzido ou suspenso.',ir:'Vendas: 15% sobre o lucro (20% no day trade), com isenção para vendas de até R$ 20 mil por mês. Dividendos: pela Lei 15.270, desde 2026 há retenção de 10% sobre dividendos acima de R$ 50 mil por mês de uma mesma empresa para a mesma pessoa. Confirme a regra vigente.',liq:'Alta, mas pode obrigar a vender em momento ruim.',risco:'Volatilidade alta e possibilidade de perda de capital.',falar:'Serve para dinheiro que o cliente não vai usar por vários anos e que aceita ver oscilar. A renda de dividendos não é fixa.'},
+ {k:'sp500',oque:'ETF que replica o S&P 500, as 500 maiores empresas dos EUA, com variação em dólar.',renda:'Os ETFs negociados na B3 costumam reinvestir os proventos. A renda vem da venda de cotas.',ir:'15% sobre o ganho na venda das cotas. Ações compradas diretamente no exterior têm regras próprias.',liq:'Alta na bolsa em dias úteis.',risco:'Oscila com o mercado americano e com o câmbio.',falar:'Em vez de apostar só na alta do dólar, o cliente investe em empresas americanas. Referência de 8% a 10% ao ano em dólar no longo prazo, sem garantia.'},
+ {k:'dolar',oque:'Compra de moeda, em espécie, conta global ou ativo atrelado ao câmbio.',renda:'Não paga renda. O resultado depende só da variação cambial.',ir:'Ganho de capital sobre a variação cambial na venda, a partir de 15%, com regras de isenção para valores baixos. Confirme a regra vigente.',liq:'Alta, com custos de câmbio e IOF na compra.',risco:'O dólar sobe e cai. Não rende juros por si só.',falar:'Serve como proteção e diversificação, não como fonte de renda. A valorização de longo prazo acompanha a diferença de inflação entre Brasil e EUA.'},
+ {k:'poup',oque:'Caderneta com regra definida em lei.',renda:'O rendimento é creditado todo mês no aniversário do depósito. Retirando só o rendimento, o principal fica.',ir:'Isenta para pessoa física.',liq:'Diária, mas o rendimento só é creditado no aniversário.',risco:'Rende 0,5% ao mês mais TR quando a Selic está acima de 8,5% a.a. Tem cobertura do FGC.',falar:'É simples e conhecida, mas costuma render menos que outras opções de renda fixa com risco parecido.'},
+ {k:'opc',nome:'Opções (derivativos)',risco0:'Alto',oque:'Contratos que dão o direito de comprar ou vender um ativo por um preço até uma data. O titular paga um prêmio.',renda:'Quem vende opções recebe o prêmio, que funciona como renda, mas assume obrigação e risco.',ir:'Alíquotas de renda variável: 15% e 20% no day trade.',liq:'Depende da série negociada.',risco:'O titular pode perder todo o prêmio. Quem lança opção sem cobertura pode ter perda muito maior.',falar:'É uma ferramenta de proteção ou de alavancagem. Exige perfil e habilitação específicos do cliente.'},
+ {k:'fundos',nome:'Fundos de investimento',risco0:'Variável',oque:'Gestão profissional em renda fixa, multimercado, ações e outras estratégias.',renda:'Alguns fundos distribuem rendimentos. Nos fundos abertos de renda fixa e multimercado o rendimento fica na cota.',ir:'Come-cotas em maio e novembro nos fundos abertos de renda fixa e multimercado. As alíquotas dependem do tipo do fundo.',liq:'Conforme o prazo de resgate do regulamento.',risco:'Varia com a estratégia. Taxas de administração e de performance reduzem o retorno.',falar:'O cliente delega a escolha dos ativos ao gestor e paga taxas por isso.'}
+];
+var ND='nd';
+
+function defaults(){
+  var p={}; CL.forEach(function(c){p[c.k]=c.def;}); p.fii_dy=9.5; p.acoes_dy=6;
+  return {selic:13.75,cdi:13.65,ipca:4.58,dolar:5.49,real:false,edited:null,params:p,
+    sim:{mode:'fv',P:10000,PMT:1000,goal:500000,cur:'BRL',prazo:10,unit:'a',k:'cdb',renda:5000,shock:-15},
+    f:{nome:'Cliente exemplo',idade:38,perfil:'moderado',obj:'Complemento de aposentadoria',goal:1500000,cur:'BRL',prazo:15,liq:'longo',novo:0,pmt:2000,renda:8000,dest:'same',carteira:[{k:'cdb',v:80000}],example:true}};
+}
+function load(){
+  var d=defaults();
+  try{
+    var s=JSON.parse(localStorage.getItem(KEY)||'null');
+    if(s){
+      d=Object.assign(d,s,{params:Object.assign(d.params,s.params||{}),sim:Object.assign(d.sim,s.sim||{}),f:Object.assign(d.f,s.f||{})});
+      if(s.f&&Array.isArray(s.f.carteira)) d.f.carteira=s.f.carteira.filter(function(r){return CK[r.k];});
+      if(!CK[d.sim.k]) d.sim.k='cdb';
+      if(d.f.dest!=='same'&&!CK[d.f.dest]) d.f.dest='same';
+      if(!d.edited){var df=defaults(); d.selic=df.selic; d.cdi=df.cdi; d.ipca=df.ipca; d.dolar=df.dolar;}
+    }
+  }catch(e){}
+  return d;
+}
+var S=load();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+var $=function(id){return document.getElementById(id);};
+var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});};
+var nf0=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
+var nf2=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:2});
+var R=function(v){return nf0.format(Math.round(v));};
+var R2=function(v){return nf2.format(v);};
+var pc=function(v){return v.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:2})+'%';};
+var num=function(el,d){var v=parseFloat(el.value);return isFinite(v)?v:(d||0);};
+function compact(v){
+  if(v>=1e6) return (v/1e6).toLocaleString('pt-BR',{maximumFractionDigits:2})+' mi';
+  if(v>=1e3) return Math.round(v/1e3).toLocaleString('pt-BR')+' mil';
+  return Math.round(v).toLocaleString('pt-BR');
+}
+
+/* ---------- motor de cálculo ---------- */
+function rateOf(k,p){
+  var c=CK[k]; if(p==null) p=S.params[k];
+  if(c.tipo==='cdi') return S.cdi*p/100;
+  if(c.tipo==='selic') return S.selic*p/100;
+  if(c.tipo==='ipca') return ((1+S.ipca/100)*(1+p/100)-1)*100;
+  if(c.tipo==='cdis') return ((1+S.cdi/100)*(1+p/100)-1)*100;
+  if(c.tipo==='usd') return ((1+p/100)*(1+S.params.dolar/100)-1)*100;
+  return p;
+}
+function realRate(rate){return ((1+rate/100)/(1+S.ipca/100)-1)*100;}
+function irReg(days){return days<=180?0.225:days<=360?0.2:days<=720?0.175:0.15;}
+function taxOn(type,gain,ageM){
+  if(gain<=0) return 0;
+  if(type==='reg') return gain*irReg(ageM*30.4);
+  if(type==='rv') return gain*0.15;
+  return 0;
+}
+function simRate(rate,type,P,PMT,t){
+  var i=Math.pow(1+rate/100,1/12)-1;
+  var f0=Math.pow(1+i,t);
+  var gross=P*f0, tax=taxOn(type,P*(f0-1),t);
+  for(var m=1;m<=t;m++){
+    var age=t-m, f=Math.pow(1+i,age);
+    gross+=PMT*f; tax+=taxOn(type,PMT*(f-1),age);
+  }
+  var inv=P+PMT*t, net=gross-tax;
+  return {inv:inv,gross:gross,tax:tax,net:net,real:net/Math.pow(1+S.ipca/100,t/12)};
+}
+function sim(k,P,PMT,t,rate){return simRate(rate==null?rateOf(k):rate,CK[k].ir,P,PMT,t);}
+var metric=function(r){return S.real?r.real:r.net;};
+function pathNet(k,P,PMT,N,shock){
+  var i=Math.pow(1+rateOf(k)/100,1/12)-1, sh=Math.pow(1+shock/100,1/12)-1, B=P;
+  for(var m=1;m<=N;m++){B=B*(1+(m<=12?sh:i))+PMT;}
+  var gain=B-(P+PMT*N);
+  return B-(CK[k].ir==='rv'?Math.max(0,gain)*0.15:0);
+}
+function solvePMT(fn,goal){
+  if(fn(0)>=goal) return 0;
+  var hi=1000,g=0;
+  while(fn(hi)<goal&&g<40){hi*=2;g++;}
+  if(fn(hi)<goal) return null;
+  var lo=0;
+  for(var n=0;n<45;n++){var mid=(lo+hi)/2; if(fn(mid)>=goal) hi=mid; else lo=mid;}
+  return hi;
+}
+function paramText(k){
+  var c=CK[k],p=S.params[k];
+  var v=p.toLocaleString('pt-BR',{maximumFractionDigits:2});
+  if(c.tipo==='cdi') return v+'% do CDI';
+  if(c.tipo==='selic') return v+'% da Selic';
+  if(c.tipo==='ipca') return 'IPCA + '+v+'% a.a.';
+  if(c.tipo==='cdis') return 'CDI + '+v+'% a.a.';
+  if(c.tipo==='usd') return v+'% a.a. em US$ mais a valorização do dólar';
+  return v+'% a.a.';
+}
+function prazoTxt(N){
+  if(N%12===0){var a=N/12; return a+(a===1?' ano':' anos');}
+  if(N>12) return Math.floor(N/12)+' a '+(N%12)+' m';
+  return N+(N===1?' mês':' meses');
+}
+function fxGoal(v,cur){return (cur==='USD'?v*S.dolar:v)||0;}
+
+/* ---------- renda ---------- */
+function payLabel(k){
+  var c=CK[k];
+  if(c.pay==='0') return 'Não distribui renda';
+  if(c.pay==='s') return 'Cupom semestral';
+  if(c.pay==='dy') return k==='fii'?'Rendimento mensal (variável)':'Dividendos e JCP (variáveis)';
+  return 'Rendimento mensal';
+}
+function payoutYield(k){
+  var c=CK[k], rt=rateOf(k);
+  if(c.pay==='0') return 0;
+  if(c.pay==='dy') return Math.min(S.params[k+'_dy']||0,rt);
+  if(c.pbase==='real') return S.params[k];
+  return rt;
+}
+/* renda estimada de um capital, retirando só o rendimento e mantendo o principal */
+function incomeOf(k,cap){
+  var c=CK[k], y=payoutYield(k), ir=c.ir==='reg'?0.15:0;
+  var gM=cap*(Math.pow(1+y/100,1/12)-1);
+  var o={gM:gM,irM:gM*ir,nM:gM*(1-ir),y:y,cupN:0,cupG:0};
+  if(c.pay==='s'){var g=cap*(Math.pow(1+y/100,1/2)-1); o.cupG=g; o.cupN=g*(1-ir);}
+  return o;
+}
+function incomeMix(by){
+  var r={gM:0,irM:0,nM:0,vr:0,fx:0,cupN:0};
+  Object.keys(by).forEach(function(k){
+    var i=incomeOf(k,by[k]); r.gM+=i.gM; r.irM+=i.irM; r.nM+=i.nM; r.cupN+=i.cupN;
+    if(CK[k].vol) r.vr+=i.nM; else r.fx+=i.nM;
+  });
+  return r;
+}
+
+/* ---------- premissas ---------- */
+function renderPrem(){
+  $('selic').value=S.selic;$('cdi').value=S.cdi;$('ipca').value=S.ipca;$('dolar').value=S.dolar;$('real').checked=!!S.real;
+  var st=$('premStatus');
+  if(S.edited){
+    st.className='pill good';
+    st.textContent='Atualizado por você em '+new Date(S.edited).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});
+  }else{
+    st.className='pill warn';
+    st.textContent='Valores de referência. Preencha com os atuais.';
+  }
+}
+['selic','cdi','ipca','dolar'].forEach(function(id){
+  $(id).addEventListener('input',function(){
+    S[id]=num($(id)); S.edited=new Date().toISOString(); save(); renderPrem(); renderAll();
+  });
+});
+$('real').addEventListener('change',function(){S.real=$('real').checked; save(); renderAll();});
+
+/* ---------- gráfico ---------- */
+function niceMax(v){
+  if(v<=0) return 1;
+  var e=Math.pow(10,Math.floor(Math.log10(v))), f=v/e, L=[1,1.5,2,2.5,3,4,5,6,8,10];
+  for(var i=0;i<L.length;i++) if(f<=L[i]+1e-9) return L[i]*e;
+  return 10*e;
+}
+function chartSVG(pts,goal,N){
+  var W=720,H=300,ml=64,mr=20,mt=18,mb=30;
+  var ys=[]; pts.forEach(function(p){ys.push(p.inv,p.net); if(S.real) ys.push(p.real);});
+  if(goal>0) ys.push(goal);
+  var maxY=niceMax(Math.max.apply(null,ys));
+  var x=function(t){return ml+(W-ml-mr)*t/N;};
+  var y=function(v){return H-mb-(H-mt-mb)*v/maxY;};
+  var out='<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Evolução do patrimônio estimado ao longo do prazo">';
+  for(var j=0;j<=5;j++){
+    var v=maxY*j/5, yy=y(v);
+    out+='<line class="grid" x1="'+ml+'" x2="'+(W-mr)+'" y1="'+yy.toFixed(1)+'" y2="'+yy.toFixed(1)+'"/>';
+    out+='<text class="ax" x="'+(ml-8)+'" y="'+(yy+4).toFixed(1)+'" text-anchor="end">'+compact(v)+'</text>';
+  }
+  var unitDiv=N>24?12:1, total=N/unitDiv, steps=[1,2,3,6,12,24,60], step=1;
+  for(var s=0;s<steps.length;s++){step=steps[s]; if(total/step<=7) break;}
+  for(var t=0;t<=total+1e-9;t+=step){
+    var tm=t*unitDiv;
+    out+='<text class="ax" x="'+x(tm).toFixed(1)+'" y="'+(H-8)+'" text-anchor="'+(t===0?'start':'middle')+'">'+(unitDiv===12?t+' a':t+' m')+'</text>';
+  }
+  if(goal>0){
+    var gy=y(goal);
+    out+='<line class="l-goal" x1="'+ml+'" x2="'+(W-mr)+'" y1="'+gy.toFixed(1)+'" y2="'+gy.toFixed(1)+'"/>';
+    out+='<text class="t-goal" x="'+(ml+6)+'" y="'+(gy-6).toFixed(1)+'">Objetivo '+compact(goal)+'</text>';
+  }
+  var path=function(key){return pts.map(function(p,i){return (i?'L':'M')+x(p.t).toFixed(1)+' '+y(p[key]).toFixed(1);}).join('');};
+  var base=y(0).toFixed(1);
+  out+='<path class="a-net" d="'+path('net')+'L'+x(N).toFixed(1)+' '+base+'L'+x(0).toFixed(1)+' '+base+'Z"/>';
+  out+='<path class="l-inv" d="'+path('inv')+'"/>';
+  if(S.real) out+='<path class="l-real" d="'+path('real')+'"/>';
+  out+='<path class="l-net" d="'+path('net')+'"/>';
+  var last=pts[pts.length-1];
+  out+='<circle class="dot" cx="'+x(last.t).toFixed(1)+'" cy="'+y(last.net).toFixed(1)+'" r="5"/>';
+  out+='<text class="t-end" x="'+(x(last.t)-8).toFixed(1)+'" y="'+(y(last.net)-12).toFixed(1)+'" text-anchor="end">'+R(last.net)+'</text>';
+  return out+'</svg>';
+}
+
+/* ---------- simulador ---------- */
+function fillSelect(el,withSame){
+  var h=withSame?'<option value="same">Mesma proporção da carteira atual</option>':'';
+  h+=CL.map(function(c){return '<option value="'+c.k+'">'+esc(c.nome)+'</option>';}).join('');
+  el.innerHTML=h;
+}
+function syncParam(){
+  var c=CK[S.sim.k];
+  $('simParamLbl').textContent='Taxa: '+c.unit;
+  $('simParam').value=S.params[S.sim.k];
+  var rt=rateOf(S.sim.k);
+  $('simRateTxt').textContent='Equivale a '+rt.toLocaleString('pt-BR',{maximumFractionDigits:2})+'% a.a. bruto em reais ('+(Math.pow(1+rt/100,1/12)-1).toLocaleString('pt-BR',{style:'percent',minimumFractionDigits:2,maximumFractionDigits:2})+' ao mês)';
+  $('simIr').textContent='Tributação aplicada: '+IRTXT[c.ir];
+  $('simNote').textContent=c.nota||'';
+  $('simNote').hidden=!c.nota;
+  $('simShockWrap').hidden=!c.vol;
+  var pp=$('pp_'+S.sim.k); if(pp&&document.activeElement!==pp) pp.value=S.params[S.sim.k];
+}
+function renderSim(){
+  var s=S.sim, k=s.k, c=CK[k], P=s.P||0;
+  var N=Math.max(1,Math.min(600,Math.round(s.unit==='a'?s.prazo*12:s.prazo)||1));
+  var goalR=fxGoal(s.goal,s.cur), defl=Math.pow(1+S.ipca/100,N/12);
+  syncParam();
+  $('simPMT').disabled=(s.mode==='pmt');
+  var PMT=s.PMT||0, unreachable=false, noGoal=false;
+  if(s.mode==='pmt'){
+    if(goalR>0){var v=solvePMT(function(p){return metric(sim(k,P,p,N));},goalR); if(v==null) unreachable=true; else PMT=v;}
+    else {PMT=0; noGoal=true;}
+  }
+  var r=sim(k,P,PMT,N), shown=metric(r), rate=rateOf(k);
+  var cur=s.cur==='USD'?' (US$ '+(s.goal||0).toLocaleString('pt-BR')+' a R$ '+S.dolar.toLocaleString('pt-BR',{minimumFractionDigits:2})+')':'';
+  var h='';
+
+  /* KPI */
+  var label,big,pill='';
+  if(s.mode==='pmt'){
+    label='Aporte mensal necessário para o patrimônio objetivo';
+    big=noGoal?'Informe o objetivo':unreachable?'Fora do alcance':R2(PMT);
+  }else{
+    label='Valor estimado ao final, líquido de IR'+(S.real?' (em valores de hoje)':'');
+    big=R(shown);
+    if(goalR>0){
+      var diff=shown-goalR;
+      pill=diff>=0?'<span class="pill good">Atinge o objetivo, sobra '+R(diff)+'</span>':'<span class="pill warn">Fica '+R(-diff)+' abaixo do objetivo</span>';
+    }
+  }
+  if(c.vol&&N<60) pill+=' <span class="pill warn">Prazo curto para renda variável (menos de 5 anos)</span>';
+  h+='<div class="card"><div class="kpi-label">'+label+'</div><div class="kpi">'+big+'</div><div class="kpi-row">'+pill+'<span class="note">'+esc(c.nome)+' · '+paramText(k)+' · '+prazoTxt(N)+(goalR>0?' · objetivo '+R(goalR)+cur:'')+'</span></div>';
+  if(unreachable) h+='<p class="note" style="margin-top:8px">Com esse prazo e essa taxa o objetivo não é alcançável com aportes razoáveis. Aumente o prazo ou revise o objetivo.</p>';
+  h+='<dl class="dl"><div><dt>Total investido</dt><dd>'+R(r.inv)+'</dd></div><div><dt>Rendimento bruto</dt><dd>'+R(r.gross-r.inv)+'</dd></div><div><dt>IR estimado</dt><dd>'+R(r.tax)+'</dd></div><div><dt>Rendimento líquido</dt><dd>'+R(r.net-r.inv)+'</dd></div>';
+  h+='<div><dt>Valor líquido nominal</dt><dd>'+R(r.net)+'</dd></div><div><dt>Em valores de hoje</dt><dd>'+R(r.real)+'</dd></div></dl></div>';
+
+  /* renda */
+  var inc=incomeOf(k,r.net), now=incomeOf(k,P), per1=incomeOf(k,1).nM;
+  h+='<div class="card"><div class="head"><h2>Renda gerada pelo patrimônio</h2>'+(c.pay==='0'?'<span class="pill neutral">Sem renda periódica</span>':c.vol?'<span class="pill warn">Variável, não garantida</span>':'<span class="pill neutral">Conforme a taxa informada</span>')+'</div>';
+  if(c.pay==='0'){
+    h+='<p class="note" style="margin-top:8px">'+esc(c.nome)+' não distribui renda. Para virar renda, o cliente precisa vender cotas ou moeda, e o patrimônio diminui a cada retirada. Compare com as classes que pagam renda na tabela abaixo.</p>';
+  }else{
+    h+='<div class="kpi-label" style="margin-top:10px">'+payLabel(k)+', líquido de IR, com o patrimônio do fim do prazo</div><div class="kpi">'+R(inc.nM)+'<span class="unit"> por mês</span></div>';
+    h+='<dl class="dl"><div><dt>Renda bruta por mês</dt><dd>'+R(inc.gM)+'</dd></div><div><dt>IR sobre a renda</dt><dd>'+R(inc.irM)+'</dd></div>';
+    if(inc.cupN) h+='<div><dt>Cupom líquido a cada 6 meses</dt><dd>'+R(inc.cupN)+'</dd></div>';
+    h+='<div><dt>Em valores de hoje</dt><dd>'+R(inc.nM/defl)+'</dd></div><div><dt>Renda com o aporte inicial hoje</dt><dd>'+R(now.nM)+'</dd></div><div><dt>Taxa de renda paga</dt><dd>'+pc(inc.y)+' a.a.</dd></div></dl>';
+    var nt=[];
+    if(c.ir==='reg') nt.push('IR de 15% sobre a renda, a alíquota de títulos com mais de 720 dias. Em prazos menores a alíquota é maior.');
+    if(c.pbase==='real') nt.push('A renda é só a taxa real. A inflação fica no principal, então a renda cresce com o IPCA.');
+    if(c.pay==='dy') nt.push('A renda de '+(k==='fii'?'FIIs':'dividendos e JCP')+' varia e pode cair. '+(k==='acoes'?'A retenção de 10% sobre dividendos acima de R$ 50 mil por mês de uma empresa não foi aplicada.':'O rendimento mensal não é fixo.'));
+    if(c.pay==='s') nt.push('Cupom pago a cada 6 meses. A renda mensal mostrada é a média.');
+    h+='<p class="note" style="margin-top:12px">'+esc(nt.join(' '))+'</p>';
+  }
+  if(s.renda>0&&c.pay!=='0'){
+    var tgt=S.real?s.renda*defl:s.renda, capNeed=per1>0?tgt/per1:null;
+    var need=capNeed==null?null:solvePMT(function(p){return sim(k,P,p,N).net;},capNeed);
+    var okInc=inc.nM>=tgt;
+    h+='<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line)"><div class="kpi-row"><strong>Renda desejada: '+R(s.renda)+' por mês'+(S.real?' em valores de hoje':'')+'</strong>'+(okInc?'<span class="pill good">Atingida</span>':'<span class="pill warn">Faltam '+R((tgt-inc.nM)/(S.real?defl:1))+' por mês</span>')+'</div>';
+    h+='<dl class="dl"><div><dt>Patrimônio necessário</dt><dd>'+(capNeed==null?'—':R(S.real?capNeed/defl:capNeed))+'</dd></div><div><dt>Aporte mensal necessário</dt><dd>'+(need==null?'fora do alcance':R2(need))+'</dd></div><div><dt>Aporte mensal informado</dt><dd>'+R2(PMT)+'</dd></div></dl></div>';
+  }
+  h+='</div>';
+
+  /* gráfico */
+  var step=Math.max(1,Math.ceil(N/60)), pts=[], t;
+  for(t=0;t<=N;t+=step){var q=sim(k,P,PMT,t); pts.push({t:t,inv:q.inv,net:q.net,real:q.real});}
+  if(pts[pts.length-1].t!==N) pts.push({t:N,inv:r.inv,net:r.net,real:r.real});
+  h+='<div class="card"><h2>Evolução no prazo</h2>'+chartSVG(pts,goalR>0?goalR:0,N)+'<div class="legend"><span><i style="border-color:var(--s-net)"></i>Líquido de IR</span><span><i style="border-color:var(--s-inv);border-top-style:dashed"></i>Total investido</span>'+(S.real?'<span><i style="border-color:var(--s-real);border-top-style:dotted"></i>Líquido em valores de hoje</span>':'')+(goalR>0?'<span><i style="border-color:var(--goal);border-top-style:dashed"></i>Objetivo</span>':'')+'</div></div>';
+
+  /* estresse */
+  if(c.vol){
+    var stv=pathNet(k,P,PMT,N,s.shock), dv=S.real?defl:1;
+    h+='<div class="card"><div class="head"><h2>E se vier um ano ruim?</h2><span class="pill warn">Volatilidade</span></div><p class="note" style="margin:6px 0 8px">Renda variável não sobe em linha reta. Aqui o 1º ano rende '+s.shock.toLocaleString('pt-BR')+'% e os anos seguintes voltam à taxa da premissa. A média só se consolida no longo prazo, em geral acima de 5 a 10 anos.</p><div class="scroll"><table><tbody>';
+    h+='<tr><td>Linha reta, na taxa da premissa</td><td class="num">'+R(r.net/dv)+'</td></tr>';
+    h+='<tr><td>Com o 1º ano em '+s.shock.toLocaleString('pt-BR')+'%</td><td class="num">'+R(stv/dv)+'</td></tr>';
+    h+='<tr><td><strong>Diferença</strong></td><td class="num"><strong>'+R((stv-r.net)/dv)+'</strong></td></tr></tbody></table></div></div>';
+  }
+
+  /* marcos */
+  var ms=[6,12,24,36,60,120,180,240,300,360,480].filter(function(m){return m<N;}).slice(0,7).concat([N]);
+  h+='<div class="card"><h2>Marcos do plano</h2><div class="scroll"><table><thead><tr><th>Prazo</th><th class="num">Investido</th><th class="num">Líquido</th><th class="num">Em valores de hoje</th><th class="num">Renda mensal líquida</th></tr></thead><tbody>';
+  ms.forEach(function(m){var q=sim(k,P,PMT,m); h+='<tr><td>'+prazoTxt(m)+'</td><td class="num">'+R(q.inv)+'</td><td class="num">'+R(q.net)+'</td><td class="num">'+R(q.real)+'</td><td class="num">'+(c.pay==='0'?'—':R(incomeOf(k,q.net).nM))+'</td></tr>';});
+  h+='</tbody></table></div></div>';
+
+  /* ranking */
+  var rows=CL.map(function(x){var q=sim(x.k,P,PMT,N); return {c:x,q:q,rate:rateOf(x.k),inc:x.pay==='0'?null:incomeOf(x.k,q.net).nM};}).sort(function(a,b){return metric(b.q)-metric(a.q);});
+  h+='<div class="card"><h2>Mesmo plano em outras classes</h2><p class="note" style="margin:4px 0 8px">Ordenado pelo valor líquido. Retorno maior costuma vir com risco ou liquidez menores, então compare as duas coisas. A renda é a estimativa com o patrimônio final de cada classe.</p><div class="scroll"><table><thead><tr><th>Classe</th><th class="num">Taxa bruta a.a.</th><th class="num">Retorno real a.a.</th><th class="num">Líquido final</th><th class="num">Renda mensal líquida</th><th>Risco</th></tr></thead><tbody>';
+  rows.forEach(function(x){
+    var rk=x.c.risco, cls=rk==='Alto'?'bad':rk==='Médio'?'warn':'good';
+    h+='<tr'+(x.c.k===k?' class="sel"':'')+'><td><button type="button" class="linkbtn" data-k="'+x.c.k+'">'+esc(x.c.nome)+'</button></td><td class="num">'+pc(x.rate)+'</td><td class="num">'+pc(realRate(x.rate))+'</td><td class="num">'+R(metric(x.q))+'</td><td class="num">'+(x.inc==null?'—':R(x.inc))+'</td><td><span class="pill '+cls+'">'+rk+'</span></td></tr>';
+  });
+  h+='</tbody></table></div></div>';
+
+  /* fala */
+  var plus=metric(sim(k,P,PMT+200,N))-shown, minus=metric(sim(k,P,PMT,N,rate-2))-shown;
+  var ganho=r.net-r.inv, shareInv=r.net>0?Math.round(r.inv/r.net*100):0;
+  var txt='Simulação com premissas editáveis, sem garantia de resultado.\n\n';
+  txt+='Aporte inicial de '+R(P)+' e '+R2(PMT)+' por mês durante '+prazoTxt(N)+', em '+c.nome+' com premissa de '+paramText(k)+' ('+rate.toLocaleString('pt-BR',{maximumFractionDigits:2})+'% a.a. bruto em reais).\n\n';
+  txt+='Total investido: '+R(r.inv)+'\nValor estimado ao final, líquido de IR: '+R(r.net)+'\nEm valores de hoje (descontando IPCA de '+pc(S.ipca)+'): '+R(r.real)+'\n';
+  if(c.pay!=='0') txt+='Renda estimada com esse patrimônio: cerca de '+R(inc.nM)+' por mês, líquida de IR ('+payLabel(k).toLowerCase()+').'+(inc.cupN?' Cupom de '+R(inc.cupN)+' a cada 6 meses.':'')+'\n';
+  txt+='\nPontos para a conversa:\n';
+  txt+='- Do valor final, cerca de '+shareInv+'% é o que o cliente coloca e '+(100-shareInv)+'% é rendimento líquido ('+R(ganho)+').\n';
+  txt+='- Aportar R$ 200 a mais por mês mudaria o resultado em cerca de '+R(plus)+'.\n';
+  txt+='- Se a taxa média ficar 2 pontos percentuais abaixo da premissa, o resultado muda em cerca de '+R(minus)+'.\n';
+  if(goalR>0&&s.mode==='fv') txt+='- Em relação ao objetivo de '+R(goalR)+': '+(shown>=goalR?'o plano cobre com folga de '+R(shown-goalR)+'.':'faltam '+R(goalR-shown)+', que podem vir de mais aporte, mais prazo ou outra alocação.')+'\n';
+  if(c.vol) txt+='- Com um 1º ano de '+s.shock.toLocaleString('pt-BR')+'%, o valor final seria cerca de '+R(pathNet(k,P,PMT,N,s.shock))+', contra '+R(r.net)+' na linha reta.\n';
+  txt+='\nO que não prometer:\n- Não apresente o valor final nem a renda como garantidos.\n- Diga que a taxa é uma premissa e que juros e inflação mudam.\n- Ao comparar classes, mostre também risco e liquidez.\n- Em renda variável e FII, os rendimentos e as cotas variam. Mostre também um cenário ruim.\n';
+  h+='<div class="card"><div class="head"><h2>Roteiro de conversa</h2><button class="btn" type="button" data-copy="sim">Copiar texto</button></div><pre class="fala" id="falaSim">'+esc(txt)+'</pre></div>';
+  $('simOut').innerHTML=h;
+  save();
+}
+$('simOut').addEventListener('click',function(e){
+  var b=e.target.closest('[data-k]');
+  if(b){S.sim.k=b.getAttribute('data-k'); $('simK').value=S.sim.k; renderSim();}
+  var c=e.target.closest('[data-copy]');
+  if(c){copyText($('falaSim').textContent,c);}
+});
+function copyText(text,btn){
+  var done=function(){var o=btn.textContent; btn.textContent='Copiado'; setTimeout(function(){btn.textContent=o;},1500);};
+  var fallback=function(){
+    var n=$('falaSim'); if(!n) return;
+    var rg=document.createRange(); rg.selectNodeContents(n);
+    var sl=window.getSelection(); sl.removeAllRanges(); sl.addRange(rg);
+    btn.textContent='Selecione e copie';
+  };
+  try{ navigator.clipboard.writeText(text).then(done,fallback); }
+  catch(e){fallback();}
+}
+function bindSim(){
+  var s=S.sim;
+  fillSelect($('simK'),false);
+  $('simK').value=s.k; $('simP').value=s.P; $('simPMT').value=s.PMT; $('simPrazo').value=s.prazo; $('simUnit').value=s.unit; $('simGoal').value=s.goal; $('simCur').value=s.cur;
+  $('simRenda').value=s.renda||''; $('simShock').value=s.shock;
+  $('mFv').checked=s.mode==='fv'; $('mPmt').checked=s.mode==='pmt';
+  var upd=function(){
+    s.P=num($('simP')); s.PMT=num($('simPMT')); s.prazo=num($('simPrazo'),1); s.unit=$('simUnit').value; s.goal=num($('simGoal')); s.cur=$('simCur').value;
+    s.renda=num($('simRenda')); s.shock=num($('simShock'),-15);
+    renderSim();
+  };
+  ['simP','simPMT','simPrazo','simUnit','simGoal','simCur','simRenda','simShock'].forEach(function(id){$(id).addEventListener('input',upd);});
+  $('simK').addEventListener('change',function(){s.k=$('simK').value; renderSim();});
+  $('simParam').addEventListener('input',function(){S.params[s.k]=num($('simParam')); renderAll();});
+  $('mFv').addEventListener('change',function(){s.mode='fv'; renderSim();});
+  $('mPmt').addEventListener('change',function(){s.mode='pmt'; renderSim();});
+}
+
+/* ---------- ficha ---------- */
+function renderRows(){
+  var f=S.f, h='';
+  f.carteira.forEach(function(r,i){
+    h+='<div class="cart-row"><select data-i="'+i+'" data-role="k" aria-label="Classe do ativo '+(i+1)+'">'+CL.map(function(c){return '<option value="'+c.k+'"'+(c.k===r.k?' selected':'')+'>'+esc(c.nome)+'</option>';}).join('')+'</select>';
+    h+='<input type="number" data-i="'+i+'" data-role="v" min="0" step="1000" inputmode="decimal" value="'+(r.v||0)+'" aria-label="Valor do ativo '+(i+1)+' em reais"><button class="btn" type="button" data-del="'+i+'" aria-label="Remover ativo '+(i+1)+'">Remover</button></div>';
+  });
+  if(!f.carteira.length) h='<p class="note">Nenhum ativo informado. Adicione o que o cliente tem hoje.</p>';
+  $('cartRows').innerHTML=h;
+}
+function projFicha(pmt,N){
+  var f=S.f, H={}, tot=0;
+  f.carteira.forEach(function(r){if(r.v>0){H[r.k]=(H[r.k]||0)+r.v; tot+=r.v;}});
+  var dw={}, k;
+  if(f.dest==='same'&&tot>0){for(k in H) dw[k]=H[k]/tot;} else {dw[f.dest==='same'?'cdb':f.dest]=1;}
+  var ks={}; Object.keys(H).concat(Object.keys(dw)).forEach(function(x){ks[x]=1;});
+  var inv=0,net=0,real=0,by={};
+  Object.keys(ks).forEach(function(c){
+    var r=sim(c,(H[c]||0)+(f.novo||0)*(dw[c]||0),pmt*(dw[c]||0),N);
+    inv+=r.inv; net+=r.net; real+=r.real; by[c]=r.net;
+  });
+  return {inv:inv,net:net,real:real,tot:tot,H:H,by:by};
+}
+var mF=function(r){return S.real?r.real:r.net;};
+function renderFicha(){
+  var f=S.f, N=Math.max(1,Math.round((f.prazo||1)*12)), goalR=fxGoal(f.goal,f.cur), defl=Math.pow(1+S.ipca/100,N/12);
+  $('exBanner').hidden=!f.example;
+  var pj=projFicha(f.pmt||0,N), tot=pj.tot, h='';
+  var objAge=(f.idade>0&&f.prazo>0)?' · objetivo aos '+(f.idade+f.prazo)+' anos':'';
+  var incEnd=incomeMix(pj.by), incNow=incomeMix(pj.H);
+
+  /* meta */
+  h+='<div class="card"><div class="kpi-label">Projeção mantendo a estratégia, líquida de IR'+(S.real?' (valores de hoje)':'')+'</div><div class="kpi">'+R(mF(pj))+'</div>';
+  var pill='';
+  if(goalR>0){
+    var d=mF(pj)-goalR;
+    pill=d>=0?'<span class="pill good">Cobre o objetivo, sobra '+R(d)+'</span>':'<span class="pill warn">Faltam '+R(-d)+' para o objetivo</span>';
+  }
+  h+='<div class="kpi-row">'+pill+'<span class="note">'+esc(f.nome||'Cliente')+' · '+prazoTxt(N)+objAge+(goalR>0?' · objetivo '+R(goalR):'')+'</span></div>';
+  if(goalR>0&&mF(pj)<goalR){
+    var need=solvePMT(function(p){return mF(projFicha(p,N));},goalR);
+    var mt=null; for(var t=1;t<=600;t++){ if(mF(projFicha(f.pmt||0,t))>=goalR){mt=t;break;} }
+    h+='<dl class="dl"><div><dt>Aporte mensal necessário no prazo</dt><dd>'+(need==null?'fora do alcance':R2(need))+'</dd></div><div><dt>Aporte mensal informado</dt><dd>'+R2(f.pmt||0)+'</dd></div><div><dt>Prazo com o aporte atual</dt><dd>'+(mt==null?'mais de 50 anos':prazoTxt(mt))+'</dd></div></dl>';
+  }
+  h+='</div>';
+
+  /* renda */
+  var tgt=f.renda>0?(S.real?f.renda*defl:f.renda):0;
+  h+='<div class="card"><div class="head"><h2>Renda mensal da carteira</h2>'+(incEnd.nM>0&&incEnd.vr/incEnd.nM>0.5?'<span class="pill warn">Maior parte variável</span>':'<span class="pill neutral">Estimativa</span>')+'</div>';
+  h+='<div class="kpi-label" style="margin-top:10px">Projetada no fim do prazo, líquida de IR, retirando só o rendimento</div><div class="kpi">'+R(incEnd.nM)+'<span class="unit"> por mês</span></div>';
+  if(tgt>0){
+    var okI=incEnd.nM>=tgt;
+    h+='<div class="kpi-row">'+(okI?'<span class="pill good">Cobre a renda desejada de '+R(f.renda)+'</span>':'<span class="pill warn">Faltam '+R((tgt-incEnd.nM)/(S.real?defl:1))+' por mês para '+R(f.renda)+'</span>')+'</div>';
+  }
+  h+='<dl class="dl"><div><dt>Renda líquida hoje</dt><dd>'+R(incNow.nM)+'</dd></div><div><dt>Renda bruta no fim</dt><dd>'+R(incEnd.gM)+'</dd></div><div><dt>IR sobre a renda</dt><dd>'+R(incEnd.irM)+'</dd></div><div><dt>Parte variável</dt><dd>'+R(incEnd.vr)+'</dd></div>';
+  if(incEnd.cupN>0) h+='<div><dt>Cupom líquido a cada 6 meses</dt><dd>'+R(incEnd.cupN)+'</dd></div>';
+  h+='<div><dt>Em valores de hoje</dt><dd>'+R(incEnd.nM/defl)+'</dd></div>';
+  if(tgt>0&&incEnd.nM<tgt){
+    var needR=solvePMT(function(p){return incomeMix(projFicha(p,N).by).nM;},tgt);
+    h+='<div><dt>Aporte mensal para a renda desejada</dt><dd>'+(needR==null?'fora do alcance':R2(needR))+'</dd></div>';
+  }
+  h+='</dl><p class="note" style="margin-top:12px">IR de 15% sobre a renda de renda fixa tributada (títulos com mais de 720 dias). Dividendos e FII sem IR na renda mensal. O que é variável pode cair.</p></div>';
+
+  /* alocação */
+  var ks=Object.keys(pj.H).sort(function(a,b){return pj.H[b]-pj.H[a];});
+  h+='<div class="card"><h2>Carteira atual</h2>';
+  if(tot>0){
+    h+='<div class="alloc" role="img" aria-label="Distribuição da carteira por classe">'+ks.map(function(k){return '<span style="width:'+(pj.H[k]/tot*100).toFixed(2)+'%;background:var(--c'+CK[k].i+')"></span>';}).join('')+'</div>';
+    h+='<div class="scroll"><table><thead><tr><th>Classe</th><th class="num">Valor</th><th class="num">Peso</th><th>Risco</th></tr></thead><tbody>';
+    ks.forEach(function(k){var rk=CK[k].risco,cls=rk==='Alto'?'bad':rk==='Médio'?'warn':'good'; h+='<tr><td><span class="sw" style="background:var(--c'+CK[k].i+')"></span>'+esc(CK[k].nome)+'</td><td class="num">'+R(pj.H[k])+'</td><td class="num">'+pc(pj.H[k]/tot*100)+'</td><td><span class="pill '+cls+'">'+rk+'</span></td></tr>';});
+    h+='<tr><td><strong>Total</strong></td><td class="num"><strong>'+R(tot)+'</strong></td><td class="num">100%</td><td></td></tr></tbody></table></div>';
+  }else h+='<p class="note" style="margin-top:6px">Informe os valores da carteira para ver a distribuição.</p>';
+  h+='</div>';
+
+  /* renda por classe */
+  var bk=Object.keys(pj.by).filter(function(k){return pj.by[k]>0;}).sort(function(a,b){return pj.by[b]-pj.by[a];});
+  if(bk.length){
+    h+='<div class="card"><h2>Renda por classe no fim do prazo</h2><div class="scroll"><table><thead><tr><th>Classe</th><th class="num">Patrimônio</th><th class="num">Renda mensal líquida</th><th>Como paga</th></tr></thead><tbody>';
+    bk.forEach(function(k){var i=incomeOf(k,pj.by[k]); h+='<tr><td><span class="sw" style="background:var(--c'+CK[k].i+')"></span>'+esc(CK[k].nome)+'</td><td class="num">'+R(pj.by[k])+'</td><td class="num">'+(CK[k].pay==='0'?'—':R(i.nM))+'</td><td>'+payLabel(k)+(i.cupN?' ('+R(i.cupN)+' por cupom)':'')+'</td></tr>';});
+    h+='</tbody></table></div></div>';
+  }
+
+  /* alertas */
+  var al=[];
+  if(tot>0){
+    var top=ks[0], share=pj.H[top]/tot;
+    if(share>=0.7) al.push(['warn','Concentração','Carteira com '+Math.round(share*100)+'% em '+CK[top].nome+'. Vale conversar sobre diversificar por classe, prazo e emissor.']);
+    var rvShare=0, infl=0, long=0;
+    ks.forEach(function(k){var w=pj.H[k]/tot; if(CK[k].vol) rvShare+=w; if(CK[k].infl) infl+=w; if(CK[k].vol||CK[k].pay==='s'||k==='cri') long+=w;});
+    if(f.perfil==='arrojado'&&rvShare===0) al.push(['neutral','Perfil','Perfil arrojado e nenhuma exposição a renda variável, FII ou dólar. A carteira está mais conservadora do que o perfil declarado.']);
+    if(f.perfil==='conservador'&&rvShare>0.2) al.push(['bad','Suitability','Perfil conservador com '+Math.round(rvShare*100)+'% em ativos variáveis. Confirme o enquadramento antes de seguir.']);
+    if(infl===0&&f.prazo>=5) al.push(['neutral','Inflação','Prazo de '+f.prazo+' anos e nenhum ativo atrelado ao IPCA. Mostre o efeito da inflação no poder de compra.']);
+    if(f.liq==='imediata'&&long>0.3) al.push(['warn','Liquidez','Cliente pode precisar do dinheiro a qualquer momento, mas '+Math.round(long*100)+'% está em ativos que oscilam ou têm liquidez menor.']);
+    var fgc=(pj.H.cdb||0)+(pj.H.lci||0)+(pj.H.poup||0);
+    if(fgc>250000) al.push(['neutral','FGC','Há '+R(fgc)+' em ativos cobertos pelo FGC. O limite é R$ 250 mil por CPF por instituição, então confira a distribuição por banco.']);
+    if(rvShare>0&&f.prazo>0&&f.prazo<5) al.push(['warn','Prazo','Há ativos variáveis e o prazo é de '+f.prazo+' anos. A média de retorno só se consolida em prazos mais longos, em geral acima de 5 a 10 anos.']);
+  }
+  if(f.renda>0&&incNow.nM<f.renda) al.push(['neutral','Renda hoje','Hoje a carteira gera cerca de '+R(incNow.nM)+' por mês líquidos, ou '+Math.round(incNow.nM/f.renda*100)+'% da renda desejada de '+R(f.renda)+'.']);
+  if(incEnd.nM>0&&incEnd.vr/incEnd.nM>0.5) al.push(['warn','Renda variável','Mais da metade da renda projetada vem de FII ou dividendos, que variam. Mostre também um cenário de queda.']);
+  if(goalR>0&&f.pmt<=0) al.push(['neutral','Aporte','Sem aporte mensal informado. Mostre quanto o aporte regular muda o resultado.']);
+  h+='<div class="card"><h2>Pontos de atenção</h2>';
+  if(al.length){h+='<ul class="clean">'+al.map(function(a){return '<li class="al"><span class="pill '+a[0]+'">'+a[1]+'</span><span>'+esc(a[2])+'</span></li>';}).join('')+'</ul>';}
+  else h+='<p class="note" style="margin-top:6px">Nenhum ponto de atenção automático com os dados atuais.</p>';
+  h+='</div>';
+  $('fOut').innerHTML=h;
+  save();
+}
+function bindFicha(){
+  var f=S.f;
+  fillSelect($('fDest'),true);
+  var set=function(){
+    $('fNome').value=f.nome||''; $('fIdade').value=f.idade||''; $('fPerfil').value=f.perfil; $('fLiq').value=f.liq; $('fObj').value=f.obj||'';
+    $('fGoal').value=f.goal||''; $('fCur').value=f.cur; $('fPrazo').value=f.prazo||''; $('fRenda').value=f.renda||''; $('fNovo').value=f.novo||''; $('fPmt').value=f.pmt||''; $('fDest').value=f.dest;
+  };
+  set(); renderRows();
+  var upd=function(){
+    f.nome=$('fNome').value; f.idade=num($('fIdade')); f.perfil=$('fPerfil').value; f.liq=$('fLiq').value; f.obj=$('fObj').value;
+    f.goal=num($('fGoal')); f.cur=$('fCur').value; f.prazo=num($('fPrazo')); f.renda=num($('fRenda')); f.novo=num($('fNovo')); f.pmt=num($('fPmt')); f.dest=$('fDest').value;
+    f.example=false; renderFicha();
+  };
+  ['fNome','fIdade','fPerfil','fLiq','fObj','fGoal','fCur','fPrazo','fRenda','fNovo','fPmt','fDest'].forEach(function(id){$(id).addEventListener('input',upd);});
+  $('cartRows').addEventListener('input',function(e){
+    var t=e.target, i=parseInt(t.getAttribute('data-i'),10);
+    if(isNaN(i)||!f.carteira[i]) return;
+    if(t.getAttribute('data-role')==='k') f.carteira[i].k=t.value; else f.carteira[i].v=num(t);
+    f.example=false; renderFicha();
+  });
+  $('cartRows').addEventListener('click',function(e){
+    var b=e.target.closest('[data-del]'); if(!b) return;
+    f.carteira.splice(parseInt(b.getAttribute('data-del'),10),1); f.example=false; renderRows(); renderFicha();
+  });
+  $('addRow').addEventListener('click',function(){f.carteira.push({k:'cdb',v:0}); f.example=false; renderRows(); renderFicha();});
+  $('fBlank').addEventListener('click',function(){
+    S.f=f=Object.assign(f,{nome:'',idade:0,perfil:ND,obj:'',goal:0,cur:'BRL',prazo:10,liq:'longo',novo:0,pmt:0,renda:0,dest:'same',carteira:[{k:'cdb',v:0}],example:false});
+    set(); renderRows(); renderFicha();
+  });
+  $('aiBtn').addEventListener('click',runAI);
+}
+function buildPrompt(){
+  var f=S.f, N=Math.max(1,Math.round((f.prazo||1)*12)), goalR=fxGoal(f.goal,f.cur), pj=projFicha(f.pmt||0,N);
+  var incEnd=incomeMix(pj.by), incNow=incomeMix(pj.H);
+  var cart=f.carteira.filter(function(r){return r.v>0;}).map(function(r){return '- '+CK[r.k].nome+': '+R(r.v)+' (premissa '+paramText(r.k)+')';}).join('\n')||'- sem ativos informados';
+  var perfil={conservador:'conservador',moderado:'moderado',arrojado:'arrojado',nd:'não definido'}[f.perfil];
+  var liq={imediata:'pode precisar a qualquer momento',medio:'em 1 a 3 anos',longo:'só no longo prazo'}[f.liq];
+  var dest=f.dest==='same'?'mesma proporção da carteira atual':CK[f.dest].nome;
+  return 'Você apoia um assessor de investimentos brasileiro (ele não é analista, gestor nem administrador de carteira e atua sob suitability e compliance). Com base na ficha abaixo, escreva um roteiro de conversa em português do Brasil, em texto simples, sem markdown e sem asteriscos. Use estas seções, cada uma começando por uma linha em maiúsculas: LEITURA DA SITUAÇÃO, PERGUNTAS PARA FAZER AO CLIENTE, CAMINHOS PARA DISCUTIR, COMO EXPLICAR, O QUE NÃO PROMETER, PONTOS PARA VALIDAR COM O COMPLIANCE. Regras: não recomende comprar ou vender ativo ou produto específico; fale de classes de ativos com prós, contras e riscos de cada caminho; discuta renda mensal, cupom semestral e acúmulo de patrimônio quando fizer sentido; lembre que renda variável oscila (um ano pode render +30% e o seguinte -15%) e que a inflação reduz o poder de compra; trate todas as taxas como premissas editáveis; não garanta rentabilidade; no máximo 450 palavras.\n\nFICHA\nIdade: '+(f.idade||'não informada')+'\nPerfil: '+perfil+'\nLiquidez: '+liq+'\nObjetivo: '+(f.obj||'não descrito')+(goalR>0?' ('+R(goalR)+' em '+f.prazo+' anos)':'')+'\nRenda mensal desejada: '+(f.renda>0?R(f.renda):'não informada')+'\nCarteira atual:\n'+cart+'\nNovo dinheiro agora: '+R(f.novo||0)+'\nAporte mensal: '+R(f.pmt||0)+'\nDestino do novo dinheiro: '+dest+'\n\nPREMISSAS\nSelic '+S.selic+'% a.a., CDI '+S.cdi+'% a.a., IPCA 12 meses '+S.ipca+'%.\nProjeção mantendo a estratégia, líquida de IR: '+R(mF(pj))+(S.real?' (valores de hoje)':'')+' em '+f.prazo+' anos, com total investido de '+R(pj.inv)+'.\nRenda mensal líquida hoje: '+R(incNow.nM)+'. Projetada no fim do prazo: '+R(incEnd.nM)+', sendo '+R(incEnd.vr)+' de ativos variáveis.';
+}
+async function runAI(){
+  var btn=$('aiBtn'), out=$('aiOut'); out.style.display='block';
+  var sample=null;
+  try{ sample=window.claude&&window.claude.use?await window.claude.use('sample'):null; }catch(e){sample=null;}
+  if(!sample){out.textContent='A análise da IA só funciona quando a página é aberta no Claude com a sua conta.'; return;}
+  btn.disabled=true; out.textContent='Analisando a ficha...';
+  try{
+    await sample(buildPrompt(),{onText:function(o){out.textContent=o.text;},cache:false,modelTier:'default'});
+  }catch(e){
+    var c=e&&e.code;
+    out.textContent=c==='not_granted'?'Permissão negada. Autorize a página a usar o Claude e tente de novo.':c==='rate_limited'?'Limite de uso atingido. Aguarde um pouco e tente de novo.':'Não foi possível gerar a análise agora. Tente de novo em instantes.';
+  }
+  btn.disabled=false;
+}
+
+/* ---------- ativos ---------- */
+function renderAtivos(){
+  var t='<thead><tr><th>Classe</th><th>Base da taxa</th><th class="num">Valor</th><th class="num">Renda paga (DY, % a.a.)</th><th class="num">Taxa bruta a.a.</th></tr></thead><tbody>';
+  CL.forEach(function(c){
+    var dy=c.pay==='dy'?'<input type="number" id="pp_'+c.k+'_dy" data-pk="'+c.k+'_dy" step="0.1" inputmode="decimal" value="'+S.params[c.k+'_dy']+'" aria-label="Renda paga por ano em '+esc(c.nome)+'" style="width:84px;text-align:right">':'—';
+    t+='<tr><td><span class="sw" style="background:var(--c'+c.i+')"></span>'+esc(c.nome)+'</td><td>'+esc(c.unit)+'</td><td class="num"><input type="number" id="pp_'+c.k+'" data-pk="'+c.k+'" step="0.01" inputmode="decimal" value="'+S.params[c.k]+'" aria-label="Valor da premissa de '+esc(c.nome)+'" style="width:96px;text-align:right"></td><td class="num">'+dy+'</td><td class="num" id="pr_'+c.k+'">'+pc(rateOf(c.k))+'</td></tr>';
+  });
+  $('paramTbl').innerHTML=t+'</tbody>';
+  var h='';
+  ATIVOS.forEach(function(a){
+    var c=CK[a.k], nome=a.nome||c.nome, rk=a.risco0||c.risco, cls=rk==='Alto'?'bad':rk==='Médio'?'warn':rk==='Baixo'?'good':'neutral';
+    h+='<article class="card ativo"><div class="head"><h3>'+esc(nome)+'</h3><span class="pill '+cls+'">Risco '+rk.toLowerCase()+'</span></div><dl>'
+      +'<div><dt>Como funciona</dt><dd>'+esc(a.oque)+'</dd></div><div><dt>Como gera renda</dt><dd>'+esc(a.renda)+'</dd></div><div><dt>Tributação</dt><dd>'+esc(a.ir)+'</dd></div><div><dt>Liquidez</dt><dd>'+esc(a.liq)+'</dd></div><div><dt>Risco principal</dt><dd>'+esc(a.risco)+'</dd></div>'
+      +'<div class="falar"><dt>Como explicar ao cliente</dt><dd>'+esc(a.falar)+'</dd></div></dl></article>';
+  });
+  $('ativoCards').innerHTML=h;
+}
+$('paramTbl').addEventListener('input',function(e){
+  var k=e.target.getAttribute('data-pk'); if(!k) return;
+  S.params[k]=num(e.target); renderAll();
+});
+
+/* ---------- radar ---------- */
+var RADAR={
+ updated:'2026-11-07T17:30:00-03:00',
+ apply:{selic:13.75,cdi:13.65,ipca:4.58,dolar:5.49},
+ ref:[
+  {l:'Selic',v:'13,75% a.a.',d:'Copom manteve em 04/11'},
+  {l:'IPCA em 12 meses',v:'4,58%',d:'setembro, IBGE'},
+  {l:'Dólar',v:'R$ 5,49',d:'fechamento de 05/11'},
+  {l:'Ibovespa',v:'168.385 pts',d:'fechamento de 06/11, +1,33%'},
+  {l:'Fed (EUA)',v:'3,75% a 4,00%',d:'mantido em 28/10'},
+  {l:'BCE (depósito)',v:'2,5%',d:'mantido em 29/10'},
+  {l:'Petróleo Brent',v:'cerca de US$ 98',d:'05/11, durante o pregão'}
+ ],
+ dest:[
+  'Juros altos por mais tempo: o Copom manteve a Selic em 13,75%, e Fed e BCE seguem em alerta com a inflação de energia.',
+  'Dólar perto da máxima do ano, perto de R$ 5,50, com dúvidas fiscais e petróleo em alta.',
+  'Semana que vem: Ata do Copom e CPI dos EUA na terça (10/11) e IPCA de outubro na quinta (12/11).'
+ ],
+ cal:[
+  {d:'Seg 09/11',h:'08:00',p:'Brasil',e:'IGP-DI de outubro',s:1,a:'Setembro: +1,50%',w:'Índice de preços da FGV que reajusta contratos, como aluguéis.'},
+  {d:'Seg 09/11',h:'08:30',p:'Brasil',e:'Boletim Focus',s:2,a:'',w:'Mostra o que o mercado espera para Selic, IPCA, câmbio e PIB. Serve de termômetro para as conversas sobre juros.'},
+  {d:'Ter 10/11',h:'08:00',p:'Brasil',e:'Ata do Copom',s:3,a:'Selic mantida em 13,75%',w:'Explica por que o BC manteve os juros e qual é o tom para as próximas reuniões. Mexe com juros futuros, bolsa e dólar.'},
+  {d:'Ter 10/11',h:'10:30',p:'EUA',e:'CPI (inflação ao consumidor) de outubro',s:3,a:'Setembro: +0,6% no mês, +3,7% em 12 meses; núcleo +0,3% no mês, +2,6% no ano',w:'Inflação alta pode levar o Fed a subir juros. Isso afeta dólar e bolsas no mundo todo.'},
+  {d:'Qua 11/11',h:'09:00',p:'Brasil',e:'Volume de serviços de setembro',s:1,a:'Agosto: -0,1% no mês',w:'Mede a atividade do setor de serviços, o maior da economia.'},
+  {d:'Qua 11/11',h:'14:30',p:'Brasil',e:'Fluxo cambial semanal',s:1,a:'Última semana: saldo positivo de US$ 9,498 bi',w:'Mostra se entrou ou saiu dólar do país, o que ajuda a explicar o câmbio.'},
+  {d:'Qui 12/11',h:'09:00',p:'Brasil',e:'IPCA de outubro',s:3,a:'Setembro: +0,82% no mês, +4,58% em 12 meses',w:'É a inflação oficial. Define o ganho real do cliente, corrige o Tesouro IPCA+ e influencia a Selic.'},
+  {d:'Qui 12/11',h:'10:30',p:'EUA',e:'Pedidos de seguro-desemprego',s:2,a:'Iniciais: 189 mil',w:'Termômetro semanal do emprego americano, que pesa nas apostas sobre os juros dos EUA.'},
+  {d:'Sex 13/11',h:'07:00',p:'Zona do Euro',e:'PIB do 3º trimestre (prévia)',s:2,a:'2º trimestre: +0,4% sobre o trimestre anterior, +1,3% em 12 meses',w:'Mostra se a economia europeia aguenta o choque de energia, o que pesa nas decisões do BCE.'},
+  {d:'Sex 13/11',h:'09:00',p:'Brasil',e:'Vendas no varejo de setembro',s:2,a:'Agosto: +0,1% no mês, +0,4% em 12 meses',w:'Indica a força do consumo, que influencia os juros e as ações do varejo.'},
+  {d:'Sex 13/11',h:'10:30',p:'EUA',e:'PPI (inflação ao produtor) de outubro',s:2,a:'',w:'Inflação na cadeia de produção, que costuma chegar depois ao consumidor.'}
+ ],
+ news:[
+  {r:'Brasil',s:3,dt:'04/11',t:'Copom mantém a Selic em 13,75%',
+   f:'A decisão foi unânime. O comunicado do Banco Central citou piora nas expectativas de inflação e um cenário de forte incerteza.',
+   z:'A Selic continua alta, então quem está em pós-fixado segue com bom rendimento. Mas o BC está atento à inflação, e esperar corte rápido dos juros é arriscado.',
+   n:'Não prometer queda de juros nem que o CDI vai ficar neste nível.',
+   x:['Renda fixa','Bolsa','Dólar'],post:'Selic em 13,75%: o que isso significa para quem tem CDB e Tesouro Selic?',
+   src:[{n:'CNN Brasil',u:'https://www.cnnbrasil.com.br/economia/money/mercado/mercado-financeiro-ibovespa-dolar-5-novembro-2026/'}]},
+  {r:'Brasil',s:3,dt:'03 e 05/11',t:'Dólar encosta em R$ 5,50, o maior nível do ano',
+   f:'Fechou a R$ 5,486 em 03/11, com dúvidas sobre as contas públicas, e a R$ 5,4876 em 05/11, acompanhando o petróleo.',
+   z:'Dólar mais alto encarece viagem e importados e valoriza quem tem patrimônio em dólar. Ter parte da carteira dolarizada é um tema de diversificação, não de aposta.',
+   n:'Não prever o dólar nem sugerir comprar por estar caro ou barato.',
+   x:['Dólar','Bolsa'],post:'Dólar perto de R$ 5,50: como proteger o patrimônio sem apostar no câmbio?',
+   src:[{n:'Agência Brasil',u:'https://agenciabrasil.ebc.com.br/economia/noticia/2026-11/dolar-sobe-074-e-aproxima-se-de-r-550-em-dia-de-cautela-fiscal'},{n:'CNN Brasil',u:'https://www.cnnbrasil.com.br/economia/money/mercado/mercado-financeiro-ibovespa-dolar-5-novembro-2026/'}]},
+  {r:'Brasil',s:2,dt:'03 e 05/11',t:'Contas públicas pesam no mercado',
+   f:'Em 03/11 o Ibovespa caiu 1,42% e o dólar subiu com dúvidas sobre as contas públicas. O ministro da Fazenda defendeu ajuste gradual. Em 05/11, investidores reagiram à convocação de uma reunião com economistas.',
+   z:'O risco fiscal costuma pesar nos juros longos e no câmbio. É um bom argumento para diversificar prazos e indexadores.',
+   n:'Não opinar sobre política nem prever o desfecho.',
+   x:['Renda fixa','Dólar','Bolsa'],
+   src:[{n:'Agência Brasil',u:'https://agenciabrasil.ebc.com.br/economia/noticia/2026-11/dolar-sobe-074-e-aproxima-se-de-r-550-em-dia-de-cautela-fiscal'},{n:'CNN Brasil',u:'https://www.cnnbrasil.com.br/economia/money/mercado/mercado-financeiro-ibovespa-dolar-5-novembro-2026/'}]},
+  {r:'Brasil',s:2,dt:'06/11',t:'Ibovespa fecha a semana em leve alta',
+   f:'Subiu 1,33% na sexta, a 168.385 pontos, com o payroll dos EUA, e terminou a semana com +0,26%. Na terça havia caído 1,42%.',
+   z:'Semana de sobe e desce, sem direção. Renda variável oscila, e o que conta é o prazo do cliente.',
+   n:'Não apresentar a alta de um dia como tendência.',
+   x:['Bolsa'],
+   src:[{n:'Fatonews',u:'https://fatonews.com.br/2026/11/07/ibovespa-sobe-pouco-mas-acao-dispara-quase-24-na-semana-o-que-explica-o-salto/'}]},
+  {r:'Brasil',s:1,dt:'semana de 06/11',t:'Temporada de balanços move ações individuais',
+   f:'A C&A subiu 23,97% na semana, a R$ 7,44, depois de um lucro do 3º trimestre acima do esperado. A ação ainda acumula queda de 36,36% no ano.',
+   z:'Balanços movem uma ação para os dois lados em poucos dias. É um exemplo de por que concentrar em uma só empresa é risco.',
+   n:'Não citar como recomendação de compra.',
+   x:['Bolsa'],
+   src:[{n:'Fatonews',u:'https://fatonews.com.br/2026/11/07/ibovespa-sobe-pouco-mas-acao-dispara-quase-24-na-semana-o-que-explica-o-salto/'}]},
+  {r:'EUA',s:3,dt:'06/11',t:'Payroll de outubro vem bem acima do esperado',
+   f:'Os EUA criaram 165 mil vagas, contra cerca de 65 mil esperadas. O desemprego ficou em 4,1%. Em setembro foram 29 mil vagas. Segundo o Monitor do Mercado, o dado elevou as apostas de alta de juros nos EUA.',
+   z:'Emprego forte reduz a chance de corte de juros nos EUA. Isso tende a sustentar o dólar e pode pesar nos ativos de risco no mundo.',
+   n:'Não prever o que o Fed fará nem o efeito exato no dólar.',
+   x:['Dólar','Bolsa','Renda fixa'],post:'Payroll forte nos EUA: por que isso mexe com o seu investimento aqui?',
+   src:[{n:'InfoMoney',u:'https://www.infomoney.com.br/mercados/payroll-eua-outubro-2026/'},{n:'Monitor do Mercado',u:'https://monitordomercado.com.br/noticias/434878-payroll-cria-mais-vagas-que-o-esperado-e-eleva-apostas-de-alta-dos-juros-nos-eua'}]},
+  {r:'EUA',s:3,dt:'28/10',t:'Fed mantém juros em 3,75% a 4,00% e deixa porta aberta para alta',
+   f:'A votação foi 10 a 2, com dois votos por alta de 0,25 ponto. O Fed já havia subido os juros em setembro. O comunicado indica que novas altas podem vir, conforme a inflação. A InfoMoney cita choque de energia, tarifas e demanda ligada à inteligência artificial como pressões de preço.',
+   z:'Os EUA não estão em ciclo de corte, e sim de cautela com inflação. Juros altos lá reduzem o espaço para o dólar cair e afetam as bolsas globais.',
+   n:'Não prometer que o dólar vai cair ou subir.',
+   x:['Dólar','Bolsa','Renda fixa'],
+   src:[{n:'InfoMoney',u:'https://www.infomoney.com.br/economia/juros-fed-eua-outubro-2026/'}]},
+  {r:'EUA',s:2,dt:'05/11',t:'Petróleo alto pressiona a inflação no mundo',
+   f:'O Brent chegou a subir 3,74% no pregão de 05/11, para cerca de US$ 98. A InfoMoney liga a pressão de preços de energia à ação militar dos EUA contra o Irã.',
+   z:'Petróleo alto pressiona a inflação global e os juros. Ajuda empresas de óleo, mas aperta o consumo.',
+   n:'Não projetar o preço do petróleo.',
+   x:['Bolsa','Dólar','Renda fixa'],
+   src:[{n:'CNN Brasil',u:'https://www.cnnbrasil.com.br/economia/money/mercado/mercado-financeiro-ibovespa-dolar-5-novembro-2026/'},{n:'InfoMoney',u:'https://www.infomoney.com.br/economia/juros-fed-eua-outubro-2026/'}]},
+  {r:'China',s:2,dt:'19/10',t:'PIB da China cresce 4,5% no 3º trimestre, puxado por exportações',
+   f:'O resultado superou o consenso e o acumulado de 2026 está em +4,6%. O consumo segue fraco, o setor imobiliário continua em recessão e o investimento em ativos fixos caiu 7,2% de janeiro a setembro. Em 05/11, o minério de ferro atingiu a máxima de um mês e a Vale subiu 0,77%.',
+   z:'A China cresce mais devagar e depende de exportação. Ela pesa em minério e commodities, e por isso em empresas como a Vale e no real.',
+   n:'Não tratar a China como garantia de alta de commodities.',
+   x:['Bolsa','Dólar'],
+   src:[{n:'CNN Brasil (PIB)',u:'https://www.cnnbrasil.com.br/economia/money/macroeconomia/pib-da-china-acelera-e-cresce-45-no-terceiro-trimestre-de-2026/'},{n:'CNN Brasil (minério)',u:'https://www.cnnbrasil.com.br/economia/money/mercado/mercado-financeiro-ibovespa-dolar-5-novembro-2026/'}]},
+  {r:'Europa',s:2,dt:'29/10',t:'BCE mantém juros em 2,5% e discute alta em dezembro',
+   f:'A decisão foi unânime. A alta foi debatida, mas não escolhida. A inflação de energia segue como risco, e analistas veem possível alta em dezembro se a inflação persistir.',
+   z:'O mundo todo lida com inflação de energia. Juros globais altos por mais tempo são um cenário a considerar nas conversas.',
+   n:'Não prometer corte de juros lá fora.',
+   x:['Dólar','Bolsa'],
+   src:[{n:'Observador',u:'https://observador.pt/2026/10/29/bce-decide-manter-a-taxa-de-juro-inalterada-em-25-apesar-de-pressoes-inflacionistas/'}]}
+ ]
+};
+var rd={min:1,reg:'Todas'};
+function starsHtml(n){return '<span class="stars" role="img" aria-label="Importância '+n+' de 3">'+'★'.repeat(n)+'<span class="off">'+'★'.repeat(3-n)+'</span></span>';}
+function chipsHtml(items,cur,attr){
+  return '<div class="chips">'+items.map(function(i){return '<button type="button" class="chip" '+attr+'="'+esc(String(i[0]))+'" aria-pressed="'+(String(i[0])===String(cur))+'">'+esc(i[1])+'</button>';}).join('')+'</div>';
+}
+function renderRadar(){
+  var up=new Date(RADAR.updated), age=(Date.now()-up.getTime())/86400000;
+  var st=age>3?'<span class="pill warn">Pode estar desatualizado. Veja se o robô de atualização está rodando.</span>':'<span class="pill good">Atualizado em '+esc(up.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}))+'</span>';
+  var h='<div class="card"><div class="head"><h2>Referência do mercado</h2>'+st+'</div><dl class="dl">'
+   +RADAR.ref.map(function(x){return '<div><dt>'+esc(x.l)+'</dt><dd>'+esc(x.v)+'</dd><span class="note">'+esc(x.d)+'</span></div>';}).join('')+'</dl>'
+   +'<div class="kpi-row" style="margin-top:14px"><button class="btn primary" id="rdApply" type="button" data-rd-apply="1">Usar Selic, IPCA e dólar nas premissas</button><span class="note" id="rdApplyNote">O CDI entra como a Selic menos 0,10 ponto, uma aproximação.</span></div></div>';
+  h+='<div class="card"><h2>Para falar com o cliente esta semana</h2><ul class="clean" style="margin-top:8px">'+RADAR.dest.map(function(d){return '<li class="al"><span>'+esc(d)+'</span></li>';}).join('')+'</ul></div>';
+  var ev=RADAR.cal.filter(function(e){return e.s>=rd.min;});
+  h+='<div class="card"><div class="head"><h2>Calendário dos próximos dias</h2>'+chipsHtml([[1,'Todos'],[2,'2 ou 3 estrelas'],[3,'Só 3 estrelas']],rd.min,'data-rd-min')+'</div><p class="note" style="margin:6px 0 8px">Horários de Brasília. As estrelas são uma classificação deste app, de 1 (pouca importância) a 3 (máxima). Confira no calendário do Investing.</p><div class="scroll"><table><thead><tr><th>Dia</th><th>Hora</th><th>País</th><th>Evento</th><th>Importância</th><th>Anterior</th><th>Por que importa</th></tr></thead><tbody>'
+   +(ev.length?ev.map(function(e){return '<tr><td>'+esc(e.d)+'</td><td>'+esc(e.h)+'</td><td>'+esc(e.p)+'</td><td><strong>'+esc(e.e)+'</strong></td><td>'+starsHtml(e.s)+'</td><td>'+esc(e.a||'—')+'</td><td style="min-width:240px">'+esc(e.w)+'</td></tr>';}).join(''):'<tr><td colspan="7">Nenhum evento neste filtro.</td></tr>')
+   +'</tbody></table></div></div>';
+  var regs=['Todas','Brasil','EUA','China','Europa'];
+  var nw=RADAR.news.filter(function(n){return rd.reg==='Todas'||n.r===rd.reg;}).sort(function(a,b){return b.s-a.s;});
+  h+='<div class="head" style="margin-top:4px"><div class="sec-title" style="margin:0"><h2>Notícias que mais movem o mercado</h2><p class="note">Resumos em palavras próprias. Abra a fonte para ler a matéria completa.</p></div>'+chipsHtml(regs.map(function(r){return [r,r];}),rd.reg,'data-rd-reg')+'</div>';
+  h+='<div class="grid-cards">'+nw.map(function(n){
+    return '<article class="card ativo"><div class="head">'+starsHtml(n.s)+'<span class="note">'+esc(n.r)+' · '+esc(n.dt)+'</span></div><h3 style="margin-top:8px">'+esc(n.t)+'</h3><dl>'
+     +'<div><dt>O que aconteceu</dt><dd>'+esc(n.f)+'</dd></div>'
+     +'<div class="falar"><dt>O que dizer ao cliente</dt><dd>'+esc(n.z)+'</dd></div>'
+     +'<div><dt>O que não prometer</dt><dd>'+esc(n.n)+'</dd></div>'
+     +'<div><dt>Afeta</dt><dd>'+n.x.map(function(x){return '<span class="pill neutral" style="margin-right:6px">'+esc(x)+'</span>';}).join('')+'</dd></div>'
+     +(n.post?'<div><dt>Ideia de post</dt><dd>'+esc(n.post)+'</dd></div>':'')
+     +'<div><dt>Fonte</dt><dd>'+n.src.map(function(s){return '<a href="'+esc(s.u)+'" target="_blank" rel="noopener">'+esc(s.n)+'</a>';}).join(' · ')+'</dd></div></dl></article>';
+  }).join('')+'</div>';
+  h+='<p class="aviso" style="margin-top:16px">Os fatos vêm das matérias citadas e dos números publicados por elas. A tradução para a conversa com o cliente é um apoio, não recomendação. Valide com o compliance da BLUE3 antes de usar em redes sociais.</p>';
+  $('rdOut').innerHTML=h;
+}
+$('v-radar').addEventListener('click',function(e){
+  var a=e.target.closest('[data-rd-apply]'), m=e.target.closest('[data-rd-min]'), r=e.target.closest('[data-rd-reg]');
+  if(a){
+    var v=RADAR.apply; S.selic=v.selic; S.cdi=v.cdi; S.ipca=v.ipca; S.dolar=v.dolar; S.edited=new Date().toISOString();
+    save(); renderPrem(); renderAll();
+    var n=$('rdApplyNote'); if(n) n.textContent='Premissas atualizadas com os valores da referência.';
+  }
+  if(m){rd.min=parseInt(m.getAttribute('data-rd-min'),10); renderRadar();}
+  if(r){rd.reg=r.getAttribute('data-rd-reg'); renderRadar();}
+});
+
+/* ---------- geral ---------- */
+function renderAll(){
+  CL.forEach(function(c){var el=$('pr_'+c.k); if(el) el.textContent=pc(rateOf(c.k));});
+  renderSim(); renderFicha();
+}
+function route(){
+  var names=['radar','simulador','ficha','ativos'], h=(location.hash||'#radar').slice(1);
+  var v=names.indexOf(h)>=0?h:'radar';
+  names.forEach(function(n){
+    $('v-'+n).hidden=(n!==v);
+    var a=$('t-'+n); a.classList.toggle('on',n===v);
+    if(n===v) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
+  });
+}
+window.addEventListener('hashchange',route);
+renderPrem(); bindSim(); bindFicha(); renderAtivos(); renderAll(); renderRadar(); route();
+if(!(window.claude&&window.claude.use)){ $('aiCard').hidden=true; }
+fetch('dados.json?'+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok) throw 0; return r.json();}).then(function(d){ if(d&&d.news&&d.ref&&d.cal){RADAR=d; renderRadar();} }).catch(function(){});
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "feeds": [
+    { "nome": "InfoMoney", "url": "https://www.infomoney.com.br/feed/" },
+    { "nome": "Money Times", "url": "https://www.moneytimes.com.br/feed/" },
+    { "nome": "Agência Brasil", "url": "https://agenciabrasil.ebc.com.br/rss/economia/feed.xml" },
+    { "nome": "CNN Brasil", "url": "https://www.cnnbrasil.com.br/economia/feed/" },
+    { "nome": "BBC Business", "url": "https://feeds.bbci.co.uk/news/business/rss.xml" },
+    { "nome": "New York Times Business", "url": "https://rss.nytimes.com/services/xml/rss/nyt/Business.xml" },
+    { "nome": "The Guardian Business", "url": "https://www.theguardian.com/uk/business/rss" }
+  ],
+  "bcb": { "selic": 432, "cdi": 4389, "ipca12m": 13522, "dolar": 1 },
+  "maxNoticias": 10,
+  "itensPorFeed": 12,
+  "maxManchetes": 45,
+  "diasMaximos": 3
+}
