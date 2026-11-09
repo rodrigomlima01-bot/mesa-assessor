@@ -4,23 +4,23 @@
     "selic": 13.75,
     "cdi": 13.65,
     "ipca": 4.58,
-    "dolar": 5.49
+    "dolar": 5.5146
   },
   "ref": [
     {
       "l": "Selic",
       "v": "13,75% a.a.",
-      "d": "Copom manteve em 04/11"
+      "d": "meta, dado de 09/12/2026"
     },
     {
       "l": "IPCA em 12 meses",
       "v": "4,58%",
-      "d": "setembro, IBGE"
+      "d": "IBGE, referência 09/2026"
     },
     {
       "l": "Dólar",
-      "v": "R$ 5,49",
-      "d": "fechamento de 05/11"
+      "v": "R$ 5,51",
+      "d": "PTAX de 09/11/2026"
     },
     {
       "l": "Ibovespa",
