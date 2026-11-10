@@ -4,7 +4,7 @@
     "selic": 13.75,
     "cdi": 13.65,
     "ipca": 4.58,
-    "dolar": 5.5146
+    "dolar": 5.584
   },
   "ref": [
     {
@@ -13,14 +13,19 @@
       "d": "meta, dado de 09/12/2026"
     },
     {
+      "l": "CDI",
+      "v": "13,65% a.a.",
+      "d": "dado de 09/11/2026"
+    },
+    {
       "l": "IPCA em 12 meses",
       "v": "4,58%",
       "d": "IBGE, referência 09/2026"
     },
     {
       "l": "Dólar",
-      "v": "R$ 5,51",
-      "d": "PTAX de 09/11/2026"
+      "v": "R$ 5,58",
+      "d": "PTAX de 10/11/2026"
     },
     {
       "l": "Ibovespa",
@@ -49,24 +54,6 @@
     "Semana que vem: Ata do Copom e CPI dos EUA na terça (10/11) e IPCA de outubro na quinta (12/11)."
   ],
   "cal": [
-    {
-      "d": "Seg 09/11",
-      "h": "08:00",
-      "p": "Brasil",
-      "e": "IGP-DI de outubro",
-      "s": 1,
-      "a": "Setembro: +1,50%",
-      "w": "Índice de preços da FGV que reajusta contratos, como aluguéis."
-    },
-    {
-      "d": "Seg 09/11",
-      "h": "08:30",
-      "p": "Brasil",
-      "e": "Boletim Focus",
-      "s": 2,
-      "a": "",
-      "w": "Mostra o que o mercado espera para Selic, IPCA, câmbio e PIB. Serve de termômetro para as conversas sobre juros."
-    },
     {
       "d": "Ter 10/11",
       "h": "08:00",
