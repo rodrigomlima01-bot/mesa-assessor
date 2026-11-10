@@ -14,7 +14,7 @@
   --accent:#0A5C56; --accent-ink:#FFFFFF; --accent-soft:#DDEFEC;
   --warn:#8F4F00; --warn-soft:#FBEBD3; --good:#1B6E44; --good-soft:#DCF0E4; --bad:#A92A22; --bad-soft:#F8DEDB;
   --s-inv:#7B8B87; --s-net:#0A5C56; --s-real:#3A6EA5; --goal:#C0572B;
-  --c1:#0A5C56; --c2:#C0572B; --c3:#3A6EA5; --c4:#A07A12; --c5:#7A4B8C; --c6:#5E7A3A; --c7:#B03A5B; --c8:#4B5563; --c9:#2F8F9D; --c10:#8A5A44; --c11:#5C6BC0; --c12:#2E8B57; --c13:#B5791D; --c14:#6B7A86; --c10:#8C5A2B; --c11:#3F7F5F; --c12:#6B6BB5;
+  --c1:#0A5C56; --c2:#C0572B; --c3:#3A6EA5; --c4:#A07A12; --c5:#7A4B8C; --c6:#5E7A3A; --c7:#B03A5B; --c8:#4B5563; --c9:#2F8F9D; --c13:#B5791D; --c14:#6B7A86; --c10:#8C5A2B; --c11:#3F7F5F; --c12:#6B6BB5;
   --font-display:"Bricolage Grotesque",system-ui,sans-serif;
   --font-body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
   --font-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
@@ -24,14 +24,14 @@
   --accent:#46BDB0; --accent-ink:#06201D; --accent-soft:#17312E;
   --warn:#E3A24B; --warn-soft:#33260F; --good:#5CCB92; --good-soft:#10291D; --bad:#F08A80; --bad-soft:#341716;
   --s-inv:#8A9B97; --s-net:#46BDB0; --s-real:#6FA3DB; --goal:#F08A5B;
-  --c1:#46BDB0; --c2:#F08A5B; --c3:#6FA3DB; --c4:#D9B24A; --c5:#B98BD0; --c6:#94BE6A; --c7:#E57C9B; --c8:#A3ADB9; --c9:#5FC3D1; --c10:#C79A82; --c11:#8E9BE6; --c12:#5CC28B; --c13:#E0A060; --c14:#9AA7B3; --c10:#C79A66; --c11:#7CC9A0; --c12:#A5A5E8;
+  --c1:#46BDB0; --c2:#F08A5B; --c3:#6FA3DB; --c4:#D9B24A; --c5:#B98BD0; --c6:#94BE6A; --c7:#E57C9B; --c8:#A3ADB9; --c9:#5FC3D1; --c13:#E0A060; --c14:#9AA7B3; --c10:#C79A66; --c11:#7CC9A0; --c12:#A5A5E8;
   color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0D1514; --surface:#141E1D; --surface-2:#192524; --ink:#E4EEEB; --muted:#93A39F; --line:#263634;
   --accent:#46BDB0; --accent-ink:#06201D; --accent-soft:#17312E;
   --warn:#E3A24B; --warn-soft:#33260F; --good:#5CCB92; --good-soft:#10291D; --bad:#F08A80; --bad-soft:#341716;
   --s-inv:#8A9B97; --s-net:#46BDB0; --s-real:#6FA3DB; --goal:#F08A5B;
-  --c1:#46BDB0; --c2:#F08A5B; --c3:#6FA3DB; --c4:#D9B24A; --c5:#B98BD0; --c6:#94BE6A; --c7:#E57C9B; --c8:#A3ADB9; --c9:#5FC3D1; --c10:#C79A82; --c11:#8E9BE6; --c12:#5CC28B; --c13:#E0A060; --c14:#9AA7B3; --c10:#C79A66; --c11:#7CC9A0; --c12:#A5A5E8;
+  --c1:#46BDB0; --c2:#F08A5B; --c3:#6FA3DB; --c4:#D9B24A; --c5:#B98BD0; --c6:#94BE6A; --c7:#E57C9B; --c8:#A3ADB9; --c9:#5FC3D1; --c13:#E0A060; --c14:#9AA7B3; --c10:#C79A66; --c11:#7CC9A0; --c12:#A5A5E8;
   color-scheme:dark}
 
 *{box-sizing:border-box}
@@ -75,7 +75,7 @@ select,input[type=text]{font-family:var(--font-body)}
 input:disabled{opacity:.55}
 .row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
 .form{display:flex;flex-direction:column;gap:14px}
-.seg{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg{display:grid;grid-template-columns:repeat(2,1fr);border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .seg input{position:absolute;opacity:0;pointer-events:none}
 .seg label{padding:9px 6px;text-align:center;font-size:13px;font-weight:500;cursor:pointer;background:var(--surface-2);color:var(--muted)}
 .seg input:checked+label{background:var(--accent);color:var(--accent-ink)}
@@ -97,8 +97,6 @@ input:disabled{opacity:.55}
 .kpi-label{font-size:13px;color:var(--muted);font-weight:500}
 .kpi{font-family:var(--font-display);font-weight:700;font-size:clamp(30px,5.4vw,46px);line-height:1.05;letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin:4px 0 8px;overflow-wrap:anywhere}
 .kpi-row{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
-.renda-line{margin-top:10px;padding:10px 12px;background:var(--accent-soft);border-radius:8px;font-size:14px}
-.renda-line strong{font-family:var(--font-mono);font-weight:500}
 .dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px 18px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
 .dl div{min-width:0}
 .dl dt{font-size:12px;color:var(--muted);font-weight:500}
@@ -151,6 +149,87 @@ ul.clean{list-style:none;margin:0;padding:0}
 .dl .note{display:block;margin-top:2px}
 .rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:12px}
 .rules h3{margin-bottom:4px}
+
+/* ---- visual v2 ---- */
+body{padding-block:0 28px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--c3));display:grid;place-items:center;flex:none}
+.logo svg{width:22px;height:22px}
+.top{padding-block:20px 12px;align-items:center}
+h1{font-size:clamp(22px,3.4vw,30px)}
+.top .sub{font-size:13px;max-width:46ch}
+.card{box-shadow:0 1px 2px rgba(16,32,30,.05)}
+details.prem{padding:0;margin-bottom:14px}
+details.prem>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;padding:12px 16px}
+details.prem>summary::-webkit-details-marker{display:none}
+details.prem>summary .cv{margin-left:auto;color:var(--muted);transition:transform .2s}
+details.prem[open]>summary .cv{transform:rotate(180deg)}
+details.prem .pbody{padding:0 16px 16px;border-top:1px solid var(--line);padding-top:14px}
+.pchip{background:var(--surface-2);border:1px solid var(--line);border-radius:99px;padding:3px 10px;font-size:12.5px;color:var(--muted);white-space:nowrap}
+.pchip b{font-family:var(--font-mono);font-weight:500;color:var(--ink)}
+.ico{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+nav.tabs{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px;border-bottom:1px solid var(--line)}
+nav.tabs a{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:9px 10px;border-radius:9px;border-bottom:0;font-size:14px}
+nav.tabs a.on{background:var(--accent);color:var(--accent-ink)}
+nav.tabs a:hover{color:inherit}
+nav.tabs a.on:hover{color:var(--accent-ink)}
+@media (max-width:700px){
+  body{padding-bottom:92px}
+  nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;margin:0;border-radius:16px 16px 0 0;border-width:1px 0 0;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 16px rgba(0,0,0,.12)}
+  nav.tabs a{flex-direction:column;gap:2px;font-size:11px;padding:6px 2px}
+  nav.tabs a .lg{display:none}
+}
+.foot{margin-top:20px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:14px}
+.tile{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:12px;min-width:0}
+.tile .tl{font-size:12px;color:var(--muted);font-weight:500}
+.tile .tv{font-family:var(--font-display);font-weight:700;font-size:22px;letter-spacing:-.01em;font-variant-numeric:tabular-nums;margin:2px 0;overflow-wrap:anywhere}
+.tile .note{font-size:12px}
+.tile .accentbar{height:3px;border-radius:2px;background:var(--accent);margin-bottom:8px;width:28px}
+.pauta{display:grid;gap:8px;margin-top:10px}
+.pauta .it{display:flex;gap:12px;align-items:flex-start;background:var(--surface-2);border-radius:10px;padding:10px 12px}
+.pauta .n{width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:13px;display:grid;place-items:center;flex:none}
+.day{margin-top:14px}
+.day>.dh{font-family:var(--font-display);font-weight:700;font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.ev{border:1px solid var(--line);border-radius:10px;background:var(--surface);margin-bottom:6px}
+.ev>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:52px 40px minmax(0,1fr) auto;gap:8px;align-items:center;padding:9px 12px}
+.ev>summary::-webkit-details-marker{display:none}
+.ev .stars{letter-spacing:0;font-size:12px}
+@media (max-width:700px){.ev>summary{grid-template-columns:44px 30px minmax(0,1fr) auto;gap:6px;padding:9px 10px}.ev strong{font-size:13.5px}}
+.ev .hh{font-family:var(--font-mono);font-size:13px}
+.ev .pp{font-size:12px;color:var(--muted);font-weight:600}
+.ev.s3{border-left:4px solid var(--bad)}
+.ev.s2{border-left:4px solid var(--warn)}
+.ev.s1{border-left:4px solid var(--line)}
+.ev .eb{padding:0 12px 12px;font-size:14px;display:grid;gap:6px}
+.ev .eb .note b{color:var(--ink)}
+.news{padding:0}
+.news>summary{list-style:none;cursor:pointer;padding:14px 16px;display:block}
+.news>summary::-webkit-details-marker{display:none}
+.news .nb{padding:0 16px 16px}
+.news .nb dl{margin:0;display:flex;flex-direction:column;gap:10px}
+.news .nb dt{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.news .nb dd{margin:2px 0 0;font-size:14px}
+.news .nb .falar{background:var(--accent-soft);border-radius:8px;padding:10px 12px}
+.news .more{font-size:12.5px;color:var(--accent);font-weight:600;margin-top:6px;display:inline-block}
+.news[open] .more{display:none}
+.prog{margin-top:12px}
+.prog .ph{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:4px}
+.prog .ph b{font-family:var(--font-mono);font-weight:500;color:var(--ink)}
+.bar{height:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:100%;border-radius:99px;background:var(--accent)}
+.bar.ok>i{background:var(--good)}
+.bar.low>i{background:var(--goal)}
+.stk{display:flex;height:14px;border-radius:99px;overflow:hidden;background:var(--surface-2);margin-top:6px}
+.stk i{display:block;height:100%}
+.donutbox{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;margin-top:12px}
+.donutbox svg{width:170px;height:170px;flex:none}
+.donutbox .lg{flex:1;min-width:200px;display:grid;gap:6px;font-size:14px}
+.donutbox .lg div{display:flex;align-items:center;gap:8px}
+.donutbox .lg .v{margin-left:auto;font-family:var(--font-mono);font-size:13px}
+.dn-c{font-family:var(--font-display);font-weight:700;font-size:18px;fill:var(--ink)}
+.dn-s{font-size:10.5px;fill:var(--muted)}
+.mini{display:inline-block;height:6px;border-radius:3px;background:var(--accent);vertical-align:middle;margin-left:6px}
 </style>
 </head>
 <body>
@@ -158,17 +237,14 @@ ul.clean{list-style:none;margin:0;padding:0}
 
 <div class="wrap">
   <header class="top">
-    <h1>Mesa do Assessor</h1>
-    <p class="sub">Simule o plano do cliente, a renda mensal e prepare a conversa. Taxas editáveis, resultado sempre como estimativa.</p>
+    <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-6 4 3 8-9"/><path d="M15 5h5v5"/></svg></div><h1>Mesa do Assessor</h1></div>
+    <p class="sub">Simule o plano, a renda mensal e prepare a conversa com o cliente.</p>
   </header>
 
-  <p class="aviso">Material de apoio ao assessor, não é recomendação personalizada. Projeções usam premissas editáveis e não garantem rentabilidade ou renda. Valide com o compliance da BLUE3 antes de mostrar a um cliente ou publicar nas redes. Os dados ficam salvos só neste navegador.</p>
-
-  <section class="card prem" aria-label="Premissas de mercado">
-    <div class="prem-head">
-      <h2>Premissas de mercado</h2>
-      <span id="premStatus" class="pill warn"></span>
-    </div>
+  <details class="card prem" id="premBox" aria-label="Premissas de mercado">
+    <summary><h2 style="font-size:16px">Premissas</h2><span id="premChips" style="display:contents"></span><span class="cv" aria-hidden="true">▾</span></summary>
+    <div class="pbody">
+    <div class="prem-head"><span id="premStatus" class="pill warn"></span></div>
     <div class="prem-grid">
       <div class="field"><label for="selic">Selic (% a.a.)</label><input type="number" id="selic" step="0.01" inputmode="decimal"></div>
       <div class="field"><label for="cdi">CDI (% a.a.)</label><input type="number" id="cdi" step="0.01" inputmode="decimal"></div>
@@ -177,13 +253,14 @@ ul.clean{list-style:none;margin:0;padding:0}
       <label class="toggle"><input type="checkbox" id="real"> Mostrar em valores de hoje (descontar IPCA)</label>
     </div>
     <p class="hint">Os números iniciais são só de referência. Preencha com os valores atuais e eles ficam salvos. Para conferir: <a href="https://www.bcb.gov.br/controleinflacao/taxaselic" target="_blank" rel="noopener">Banco Central</a>, <a href="https://www.ibge.gov.br/explica/inflacao.php" target="_blank" rel="noopener">IBGE</a> e o <a href="https://www.investing.com/economic-calendar/" target="_blank" rel="noopener">calendário do Investing</a>.</p>
-  </section>
+    </div>
+  </details>
 
   <nav class="tabs" aria-label="Seções">
-    <a id="t-radar" href="#radar">Radar</a>
-    <a id="t-simulador" href="#simulador">Simulador</a>
-    <a id="t-ficha" href="#ficha">Ficha do cliente</a>
-    <a id="t-ativos" href="#ativos">Ativos e premissas</a>
+    <a id="t-radar" href="#radar"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9"/><path d="M12 12l5-5"/><circle cx="12" cy="12" r="1.5"/></svg><span>Radar</span></a>
+    <a id="t-simulador" href="#simulador"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h2M12 12h2M16 12h0M8 16h2M12 16h2"/></svg><span>Simulador</span></a>
+    <a id="t-ficha" href="#ficha"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg><span>Cliente</span></a>
+    <a id="t-ativos" href="#ativos"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9h-9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/></svg><span>Ativos</span></a>
   </nav>
 
   <!-- RADAR -->
@@ -289,8 +366,9 @@ ul.clean{list-style:none;margin:0;padding:0}
       <div class="grid-cards" id="ativoCards"></div>
     </div>
   </section>
-</div>
 
+<p class="aviso foot">Material de apoio ao assessor, não é recomendação personalizada. Projeções usam premissas editáveis e não garantem rentabilidade ou renda. Valide com o compliance da BLUE3 antes de mostrar a um cliente ou publicar nas redes. Os dados ficam salvos só neste navegador.</p>
+</div>
 <script>
 (function(){
 'use strict';
@@ -480,6 +558,7 @@ function incomeMix(by){
 /* ---------- premissas ---------- */
 function renderPrem(){
   $('selic').value=S.selic;$('cdi').value=S.cdi;$('ipca').value=S.ipca;$('dolar').value=S.dolar;$('real').checked=!!S.real;
+  $('premChips').innerHTML='<span class="pchip">Selic <b>'+pc(S.selic)+'</b></span><span class="pchip">CDI <b>'+pc(S.cdi)+'</b></span><span class="pchip">IPCA <b>'+pc(S.ipca)+'</b></span><span class="pchip">US$ <b>'+S.dolar.toLocaleString('pt-BR',{minimumFractionDigits:2})+'</b></span>';
   var st=$('premStatus');
   if(S.edited){
     st.className='pill good';
@@ -557,6 +636,17 @@ function syncParam(){
   $('simShockWrap').hidden=!c.vol;
   var pp=$('pp_'+S.sim.k); if(pp&&document.activeElement!==pp) pp.value=S.params[S.sim.k];
 }
+function donut(items,center,sub){
+  var tot=items.reduce(function(a,i){return a+Math.max(0,i.v);},0), r=15.9155, off=0, o='';
+  if(tot<=0) return '';
+  items.forEach(function(i){ if(i.v<=0) return; var p=i.v/tot*100;
+    o+='<circle cx="21" cy="21" r="'+r+'" fill="none" stroke-width="6" style="stroke:'+i.c+'" stroke-dasharray="'+p.toFixed(3)+' '+(100-p).toFixed(3)+'" stroke-dashoffset="'+(-off).toFixed(3)+'" transform="rotate(-90 21 21)"/>'; off+=p; });
+  return '<svg viewBox="0 0 42 42" role="img" aria-label="Gráfico de rosca"><circle cx="21" cy="21" r="'+r+'" fill="none" stroke-width="6" style="stroke:var(--surface-2)"/>'+o+'<text x="21" y="21.5" text-anchor="middle" class="dn-c" style="font-size:4.2px">'+esc(center||'')+'</text><text x="21" y="26" text-anchor="middle" class="dn-s" style="font-size:2.8px">'+esc(sub||'')+'</text></svg>';
+}
+function progBar(label,val,goal,fmt){
+  var p=goal>0?Math.max(0,val/goal*100):0, cls=p>=100?'ok':p<50?'low':'';
+  return '<div class="prog"><div class="ph"><span>'+label+'</span><b>'+Math.round(p)+'%</b></div><div class="bar '+cls+'" role="img" aria-label="'+Math.round(p)+'% do objetivo"><i style="width:'+Math.min(100,p).toFixed(1)+'%"></i></div></div>';
+}
 function renderSim(){
   var s=S.sim, k=s.k, c=CK[k], P=s.P||0;
   var N=Math.max(1,Math.min(600,Math.round(s.unit==='a'?s.prazo*12:s.prazo)||1));
@@ -589,7 +679,11 @@ function renderSim(){
   h+='<div class="card"><div class="kpi-label">'+label+'</div><div class="kpi">'+big+'</div><div class="kpi-row">'+pill+'<span class="note">'+esc(c.nome)+' · '+paramText(k)+' · '+prazoTxt(N)+(goalR>0?' · objetivo '+R(goalR)+cur:'')+'</span></div>';
   if(unreachable) h+='<p class="note" style="margin-top:8px">Com esse prazo e essa taxa o objetivo não é alcançável com aportes razoáveis. Aumente o prazo ou revise o objetivo.</p>';
   h+='<dl class="dl"><div><dt>Total investido</dt><dd>'+R(r.inv)+'</dd></div><div><dt>Rendimento bruto</dt><dd>'+R(r.gross-r.inv)+'</dd></div><div><dt>IR estimado</dt><dd>'+R(r.tax)+'</dd></div><div><dt>Rendimento líquido</dt><dd>'+R(r.net-r.inv)+'</dd></div>';
-  h+='<div><dt>Valor líquido nominal</dt><dd>'+R(r.net)+'</dd></div><div><dt>Em valores de hoje</dt><dd>'+R(r.real)+'</dd></div></dl></div>';
+  h+='<div><dt>Valor líquido nominal</dt><dd>'+R(r.net)+'</dd></div><div><dt>Em valores de hoje</dt><dd>'+R(r.real)+'</dd></div></dl>';
+  if(s.mode!=='pmt'&&goalR>0) h+=progBar('Caminho até o objetivo',shown,goalR);
+  var gainN=Math.max(0,r.net-r.inv), tot3=r.inv+gainN+r.tax;
+  if(tot3>0) h+='<div class="prog"><div class="ph"><span>De onde vem o dinheiro</span><b>'+R(tot3)+' bruto</b></div><div class="stk" role="img" aria-label="Composição"><i style="width:'+(r.inv/tot3*100).toFixed(1)+'%;background:var(--s-inv)"></i><i style="width:'+(gainN/tot3*100).toFixed(1)+'%;background:var(--s-net)"></i><i style="width:'+(r.tax/tot3*100).toFixed(1)+'%;background:var(--goal)"></i></div><div class="legend"><span><i style="border-color:var(--s-inv)"></i>Você investiu '+R(r.inv)+'</span><span><i style="border-color:var(--s-net)"></i>Rendimento líquido '+R(gainN)+'</span><span><i style="border-color:var(--goal)"></i>IR '+R(r.tax)+'</span></div></div>';
+  h+='</div>';
 
   /* renda */
   var inc=incomeOf(k,r.net), now=incomeOf(k,P), per1=incomeOf(k,1).nM;
@@ -739,6 +833,7 @@ function renderFicha(){
     pill=d>=0?'<span class="pill good">Cobre o objetivo, sobra '+R(d)+'</span>':'<span class="pill warn">Faltam '+R(-d)+' para o objetivo</span>';
   }
   h+='<div class="kpi-row">'+pill+'<span class="note">'+esc(f.nome||'Cliente')+' · '+prazoTxt(N)+objAge+(goalR>0?' · objetivo '+R(goalR):'')+'</span></div>';
+  if(goalR>0) h+=progBar('Caminho até o objetivo',mF(pj),goalR);
   if(goalR>0&&mF(pj)<goalR){
     var need=solvePMT(function(p){return mF(projFicha(p,N));},goalR);
     var mt=null; for(var t=1;t<=600;t++){ if(mF(projFicha(f.pmt||0,t))>=goalR){mt=t;break;} }
@@ -767,7 +862,7 @@ function renderFicha(){
   var ks=Object.keys(pj.H).sort(function(a,b){return pj.H[b]-pj.H[a];});
   h+='<div class="card"><h2>Carteira atual</h2>';
   if(tot>0){
-    h+='<div class="alloc" role="img" aria-label="Distribuição da carteira por classe">'+ks.map(function(k){return '<span style="width:'+(pj.H[k]/tot*100).toFixed(2)+'%;background:var(--c'+CK[k].i+')"></span>';}).join('')+'</div>';
+    h+='<div class="donutbox">'+donut(ks.map(function(k){return {v:pj.H[k],c:'var(--c'+CK[k].i+')'};}),R(tot),'carteira atual')+'<div class="lg">'+ks.map(function(k){return '<div><span class="sw" style="background:var(--c'+CK[k].i+');margin:0"></span>'+esc(CK[k].nome)+'<span class="v">'+pc(pj.H[k]/tot*100)+'</span></div>';}).join('')+'</div></div>';
     h+='<div class="scroll"><table><thead><tr><th>Classe</th><th class="num">Valor</th><th class="num">Peso</th><th>Risco</th></tr></thead><tbody>';
     ks.forEach(function(k){var rk=CK[k].risco,cls=rk==='Alto'?'bad':rk==='Médio'?'warn':'good'; h+='<tr><td><span class="sw" style="background:var(--c'+CK[k].i+')"></span>'+esc(CK[k].nome)+'</td><td class="num">'+R(pj.H[k])+'</td><td class="num">'+pc(pj.H[k]/tot*100)+'</td><td><span class="pill '+cls+'">'+rk+'</span></td></tr>';});
     h+='<tr><td><strong>Total</strong></td><td class="num"><strong>'+R(tot)+'</strong></td><td class="num">100%</td><td></td></tr></tbody></table></div>';
@@ -986,27 +1081,29 @@ function chipsHtml(items,cur,attr){
 function renderRadar(){
   var up=new Date(RADAR.updated), age=(Date.now()-up.getTime())/86400000;
   var st=age>3?'<span class="pill warn">Pode estar desatualizado. Veja se o robô de atualização está rodando.</span>':'<span class="pill good">Atualizado em '+esc(up.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}))+'</span>';
-  var h='<div class="card"><div class="head"><h2>Referência do mercado</h2>'+st+'</div><dl class="dl">'
-   +RADAR.ref.map(function(x){return '<div><dt>'+esc(x.l)+'</dt><dd>'+esc(x.v)+'</dd><span class="note">'+esc(x.d)+'</span></div>';}).join('')+'</dl>'
+  var h='<div class="card"><div class="head"><h2>Referência do mercado</h2>'+st+'</div><div class="tiles">'
+   +RADAR.ref.map(function(x){return '<div class="tile"><div class="accentbar"></div><div class="tl">'+esc(x.l)+'</div><div class="tv">'+esc(x.v)+'</div><span class="note">'+esc(x.d)+'</span></div>';}).join('')+'</div>'
    +'<div class="kpi-row" style="margin-top:14px"><button class="btn primary" id="rdApply" type="button" data-rd-apply="1">Usar Selic, IPCA e dólar nas premissas</button><span class="note" id="rdApplyNote">O CDI entra como a Selic menos 0,10 ponto, uma aproximação.</span></div></div>';
-  h+='<div class="card"><h2>Para falar com o cliente esta semana</h2><ul class="clean" style="margin-top:8px">'+RADAR.dest.map(function(d){return '<li class="al"><span>'+esc(d)+'</span></li>';}).join('')+'</ul></div>';
+  h+='<div class="card"><h2>Para falar com o cliente esta semana</h2><div class="pauta">'+RADAR.dest.map(function(d,i){return '<div class="it"><span class="n">'+(i+1)+'</span><span>'+esc(d)+'</span></div>';}).join('')+'</div></div>';
   var ev=RADAR.cal.filter(function(e){return e.s>=rd.min;});
-  h+='<div class="card"><div class="head"><h2>Calendário dos próximos dias</h2>'+chipsHtml([[1,'Todos'],[2,'2 ou 3 estrelas'],[3,'Só 3 estrelas']],rd.min,'data-rd-min')+'</div><p class="note" style="margin:6px 0 8px">Horários de Brasília. As estrelas são uma classificação deste app, de 1 (pouca importância) a 3 (máxima). Confira no calendário do Investing.</p><div class="scroll"><table><thead><tr><th>Dia</th><th>Hora</th><th>País</th><th>Evento</th><th>Importância</th><th>Anterior</th><th>Por que importa</th></tr></thead><tbody>'
-   +(ev.length?ev.map(function(e){return '<tr><td>'+esc(e.d)+'</td><td>'+esc(e.h)+'</td><td>'+esc(e.p)+'</td><td><strong>'+esc(e.e)+'</strong></td><td>'+starsHtml(e.s)+'</td><td>'+esc(e.a||'—')+'</td><td style="min-width:240px">'+esc(e.w)+'</td></tr>';}).join(''):'<tr><td colspan="7">Nenhum evento neste filtro.</td></tr>')
-   +'</tbody></table></div></div>';
+  var days=[], by={};
+  ev.forEach(function(e){ if(!by[e.d]){by[e.d]=[];days.push(e.d);} by[e.d].push(e); });
+  h+='<div class="card"><div class="head"><h2>Calendário econômico</h2>'+chipsHtml([[1,'Todos'],[2,'2 ou 3 estrelas'],[3,'Só 3 estrelas']],rd.min,'data-rd-min')+'</div><p class="note" style="margin:6px 0 0">Horários de Brasília. Estrelas: classificação deste app, de 1 a 3. Toque no evento para ver por que importa.</p>'
+   +(days.length?days.map(function(d){return '<div class="day"><div class="dh">'+esc(d)+'</div>'+by[d].map(function(e){
+      return '<details class="ev s'+e.s+'"><summary><span class="hh">'+esc(e.h)+'</span><span class="pp">'+esc(e.p)+'</span><strong>'+esc(e.e)+'</strong>'+starsHtml(e.s)+'</summary><div class="eb"><span>'+esc(e.w)+'</span>'+(e.a?'<span class="note"><b>Anterior:</b> '+esc(e.a)+'</span>':'')+'</div></details>';}).join('')+'</div>';}).join(''):'<p class="note" style="margin-top:12px">Nenhum evento neste filtro.</p>')
+   +'</div>';
   var regs=['Todas','Brasil','EUA','China','Europa'];
   var nw=RADAR.news.filter(function(n){return rd.reg==='Todas'||n.r===rd.reg;}).sort(function(a,b){return b.s-a.s;});
-  h+='<div class="head" style="margin-top:4px"><div class="sec-title" style="margin:0"><h2>Notícias que mais movem o mercado</h2><p class="note">Resumos em palavras próprias. Abra a fonte para ler a matéria completa.</p></div>'+chipsHtml(regs.map(function(r){return [r,r];}),rd.reg,'data-rd-reg')+'</div>';
+  h+='<div class="head" style="margin-top:4px"><div class="sec-title" style="margin:0"><h2>Notícias que mais movem o mercado</h2><p class="note">Resumos em palavras próprias. Toque para abrir, e use a fonte para a matéria completa.</p></div>'+chipsHtml(regs.map(function(r){return [r,r];}),rd.reg,'data-rd-reg')+'</div>';
   h+='<div class="grid-cards">'+nw.map(function(n){
-    return '<article class="card ativo"><div class="head">'+starsHtml(n.s)+'<span class="note">'+esc(n.r)+' · '+esc(n.dt)+'</span></div><h3 style="margin-top:8px">'+esc(n.t)+'</h3><dl>'
+    return '<details class="card news"><summary><div class="head">'+starsHtml(n.s)+'<span class="note">'+esc(n.r)+' · '+esc(n.dt)+'</span></div><h3 style="margin-top:8px">'+esc(n.t)+'</h3><p class="note" style="margin-top:6px">'+n.x.map(function(x){return '<span class="pill neutral" style="margin-right:6px">'+esc(x)+'</span>';}).join('')+'</p><span class="more">Ver resumo e o que dizer ao cliente ▾</span></summary><div class="nb"><dl>'
      +'<div><dt>O que aconteceu</dt><dd>'+esc(n.f)+'</dd></div>'
      +'<div class="falar"><dt>O que dizer ao cliente</dt><dd>'+esc(n.z)+'</dd></div>'
      +'<div><dt>O que não prometer</dt><dd>'+esc(n.n)+'</dd></div>'
-     +'<div><dt>Afeta</dt><dd>'+n.x.map(function(x){return '<span class="pill neutral" style="margin-right:6px">'+esc(x)+'</span>';}).join('')+'</dd></div>'
      +(n.post?'<div><dt>Ideia de post</dt><dd>'+esc(n.post)+'</dd></div>':'')
-     +'<div><dt>Fonte</dt><dd>'+n.src.map(function(s){return '<a href="'+esc(s.u)+'" target="_blank" rel="noopener">'+esc(s.n)+'</a>';}).join(' · ')+'</dd></div></dl></article>';
+     +'<div><dt>Fonte</dt><dd>'+n.src.map(function(s){return '<a href="'+esc(s.u)+'" target="_blank" rel="noopener">'+esc(s.n)+'</a>';}).join(' · ')+'</dd></div></dl></div></details>';
   }).join('')+'</div>';
-  h+='<p class="aviso" style="margin-top:16px">Os fatos vêm das matérias citadas e dos números publicados por elas. A tradução para a conversa com o cliente é um apoio, não recomendação. Valide com o compliance da BLUE3 antes de usar em redes sociais.</p>';
+  h+='<p class="note" style="margin-top:12px">Os fatos vêm das matérias citadas. A tradução para a conversa com o cliente é um apoio, não recomendação. Valide com o compliance da BLUE3 antes de usar em redes sociais.</p>';
   $('rdOut').innerHTML=h;
 }
 $('v-radar').addEventListener('click',function(e){
