@@ -4,7 +4,7 @@
     "selic": 13.75,
     "cdi": 13.65,
     "ipca": 4.58,
-    "dolar": 5.584
+    "dolar": 5.5606
   },
   "ref": [
     {
@@ -15,7 +15,7 @@
     {
       "l": "CDI",
       "v": "13,65% a.a.",
-      "d": "dado de 09/11/2026"
+      "d": "dado de 10/11/2026"
     },
     {
       "l": "IPCA em 12 meses",
@@ -24,8 +24,8 @@
     },
     {
       "l": "Dólar",
-      "v": "R$ 5,58",
-      "d": "PTAX de 10/11/2026"
+      "v": "R$ 5,56",
+      "d": "PTAX de 11/11/2026"
     },
     {
       "l": "Ibovespa",
@@ -54,24 +54,6 @@
     "Semana que vem: Ata do Copom e CPI dos EUA na terça (10/11) e IPCA de outubro na quinta (12/11)."
   ],
   "cal": [
-    {
-      "d": "Ter 10/11",
-      "h": "08:00",
-      "p": "Brasil",
-      "e": "Ata do Copom",
-      "s": 3,
-      "a": "Selic mantida em 13,75%",
-      "w": "Explica por que o BC manteve os juros e qual é o tom para as próximas reuniões. Mexe com juros futuros, bolsa e dólar."
-    },
-    {
-      "d": "Ter 10/11",
-      "h": "10:30",
-      "p": "EUA",
-      "e": "CPI (inflação ao consumidor) de outubro",
-      "s": 3,
-      "a": "Setembro: +0,6% no mês, +3,7% em 12 meses; núcleo +0,3% no mês, +2,6% no ano",
-      "w": "Inflação alta pode levar o Fed a subir juros. Isso afeta dólar e bolsas no mundo todo."
-    },
     {
       "d": "Qua 11/11",
       "h": "09:00",
