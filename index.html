@@ -230,6 +230,28 @@ nav.tabs a.on:hover{color:var(--accent-ink)}
 .dn-c{font-family:var(--font-display);font-weight:700;font-size:18px;fill:var(--ink)}
 .dn-s{font-size:10.5px;fill:var(--muted)}
 .mini{display:inline-block;height:6px;border-radius:3px;background:var(--accent);vertical-align:middle;margin-left:6px}
+/* ---- avaliador ---- */
+.vd{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.vd .big{font-family:var(--font-display);font-weight:700;font-size:clamp(26px,5vw,38px);letter-spacing:-.02em;line-height:1.05}
+.gauge{margin-top:16px}
+.gauge .mt{margin-top:6px}
+.gauge .gl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}
+.mt{position:relative;padding-block:3px}
+.mz{display:flex;height:10px;border-radius:99px;overflow:hidden}
+.mz i{display:block;height:100%;opacity:.55}
+.mz .good{background:var(--good)}
+.mz .warn{background:var(--warn)}
+.mz .bad{background:var(--bad)}
+.mt b{position:absolute;top:0;width:4px;height:16px;border-radius:2px;background:var(--ink);transform:translateX(-50%);box-shadow:0 0 0 2px var(--surface)}
+.ind{padding:12px 0;border-top:1px solid var(--line)}
+.ind:first-of-type{border-top:0}
+.ind .it{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;justify-content:space-between;margin-bottom:6px}
+.ind .iv{font-family:var(--font-mono);font-weight:500;font-size:16px}
+.ind .in{font-weight:600}
+.ind .id{font-size:12.5px;color:var(--muted);margin-top:6px}
+.benchrow{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:end;margin-bottom:8px}
+.benchrow .lbl{font-size:13px;color:var(--ink);font-weight:500}
+details.bench summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:14px}
 </style>
 </head>
 <body>
@@ -260,12 +282,54 @@ nav.tabs a.on:hover{color:var(--accent-ink)}
     <a id="t-radar" href="#radar"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9"/><path d="M12 12l5-5"/><circle cx="12" cy="12" r="1.5"/></svg><span>Radar</span></a>
     <a id="t-simulador" href="#simulador"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h2M12 12h2M16 12h0M8 16h2M12 16h2"/></svg><span>Simulador</span></a>
     <a id="t-ficha" href="#ficha"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg><span>Cliente</span></a>
+    <a id="t-avaliador" href="#avaliador"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M6 21h12M5 7h14"/><path d="M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0z"/></svg><span>Avaliador</span></a>
     <a id="t-ativos" href="#ativos"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9h-9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/></svg><span>Ativos</span></a>
   </nav>
 
   <!-- RADAR -->
   <section id="v-radar" hidden>
     <div class="stack" id="rdOut"></div>
+  </section>
+
+  <!-- AVALIADOR -->
+  <section id="v-avaliador" hidden>
+    <div class="cols">
+      <div class="card form" id="avIn">
+        <h2>Dados da empresa</h2>
+        <div class="ex" id="avEx"><span>Dados fictícios de exemplo. Substitua pelos da empresa.</span><button class="btn" id="avBlank" type="button">Começar em branco</button></div>
+        <div class="row2">
+          <div class="field"><label for="avTicker">Ticker</label><input type="text" id="avTicker" maxlength="10" placeholder="Ex.: VALE3" autocapitalize="characters"></div>
+          <div class="field"><label for="avSet">Tipo de empresa</label><select id="avSet"></select></div>
+        </div>
+        <p class="note" id="avSetNote"></p>
+        <div class="row2">
+          <div class="field"><label for="avPreco">Preço da ação (R$)</label><input type="number" id="avPreco" min="0" step="0.01" inputmode="decimal"></div>
+          <div class="field"><label for="avAcoes">Ações (milhões)</label><input type="number" id="avAcoes" min="0" step="0.1" inputmode="decimal"></div>
+        </div>
+        <p class="note">Os campos abaixo são em <strong>R$ milhões</strong>, dos últimos 12 meses (release de resultados ou site de RI da empresa).</p>
+        <div class="row2">
+          <div class="field"><label for="avVM" id="avVMlbl">Valor de mercado</label><input type="number" id="avVM" min="0" step="1" inputmode="decimal"></div>
+          <div class="field"><label for="avLL">Lucro líquido</label><input type="number" id="avLL" step="1" inputmode="decimal"></div>
+        </div>
+        <div class="row2" id="avRowEb">
+          <div class="field"><label for="avEBITDA">EBITDA</label><input type="number" id="avEBITDA" step="1" inputmode="decimal"></div>
+          <div class="field"><label for="avDL">Dívida líquida</label><input type="number" id="avDL" step="1" inputmode="decimal"></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="avPL">Patrimônio líquido</label><input type="number" id="avPL" step="1" inputmode="decimal"></div>
+          <div class="field"><label for="avProv">Proventos pagos</label><input type="number" id="avProv" min="0" step="1" inputmode="decimal"></div>
+        </div>
+        <p class="note" id="avDLnote">Dívida líquida = dívida bruta menos caixa e aplicações (negativa se a empresa tem mais caixa que dívida).</p>
+        <details class="bench" id="avAdv"><summary>Avançado (opcional): caixa operacional e capex</summary><p class="note" style="margin:8px 0">Estão na demonstração de fluxo de caixa. Sem eles, o app avalia só pelos outros múltiplos. Capex entra como número positivo.</p>
+          <div class="row2">
+            <div class="field"><label for="avFCO">Caixa operacional</label><input type="number" id="avFCO" step="1" inputmode="decimal"></div>
+            <div class="field"><label for="avCapex">Investimentos (capex)</label><input type="number" id="avCapex" step="1" inputmode="decimal"></div>
+          </div>
+        </details>
+        <details class="bench"><summary>Faixas de barato e caro (editáveis)</summary><p class="note" style="margin:8px 0">Referências genéricas e aproximadas, não são dado de mercado. Ajuste conforme o histórico do setor que você acompanha.</p><div id="avBench"></div><button class="btn" id="avBenchReset" type="button" style="margin-top:8px">Restaurar padrão deste tipo</button></details>
+      </div>
+      <div class="stack" id="avOut"></div>
+    </div>
   </section>
 
   <!-- SIMULADOR -->
@@ -427,14 +491,17 @@ function defaults(){
   var p={}; CL.forEach(function(c){p[c.k]=c.def;}); p.fii_dy=9.5; p.acoes_dy=6;
   return {selic:13.75,cdi:13.65,ipca:4.58,dolar:5.49,real:false,edited:null,params:p,
     sim:{mode:'fv',P:10000,PMT:1000,goal:500000,cur:'BRL',prazo:10,unit:'a',k:'cdb',renda:5000,shock:-15},
+    av:{ticker:'EXEMPLO3',set:'geral',preco:0,acoes:0,vm:12000,ll:1300,ebitda:2600,dl:3000,fco:2200,capex:900,pl:7000,prov:700,bench:{},example:true},
     f:{nome:'Cliente exemplo',idade:38,perfil:'moderado',obj:'Complemento de aposentadoria',goal:1500000,cur:'BRL',prazo:15,liq:'longo',novo:0,pmt:2000,renda:8000,dest:'same',carteira:[{k:'cdb',v:80000}],example:true}};
 }
+function AVK_OK(k){return ['geral','varejo','util','commod','banco','imob'].indexOf(k)>=0;}
 function load(){
   var d=defaults();
   try{
     var s=JSON.parse(localStorage.getItem(KEY)||'null');
     if(s){
-      d=Object.assign(d,s,{params:Object.assign(d.params,s.params||{}),sim:Object.assign(d.sim,s.sim||{}),f:Object.assign(d.f,s.f||{})});
+      d=Object.assign(d,s,{params:Object.assign(d.params,s.params||{}),sim:Object.assign(d.sim,s.sim||{}),f:Object.assign(d.f,s.f||{}),av:Object.assign(d.av,s.av||{})});
+      if(!d.av.bench||typeof d.av.bench!=='object') d.av.bench={}; if(!AVK_OK(d.av.set)) d.av.set='geral';
       if(s.f&&Array.isArray(s.f.carteira)) d.f.carteira=s.f.carteira.filter(function(r){return CK[r.k];});
       if(!CK[d.sim.k]) d.sim.k='cdb';
       if(d.f.dest!=='same'&&!CK[d.f.dest]) d.f.dest='same';
@@ -765,10 +832,10 @@ $('simOut').addEventListener('click',function(e){
   var c=e.target.closest('[data-copy]');
   if(c){copyText($('falaSim').textContent,c);}
 });
-function copyText(text,btn){
+function copyText(text,btn,id){
   var done=function(){var o=btn.textContent; btn.textContent='Copiado'; setTimeout(function(){btn.textContent=o;},1500);};
   var fallback=function(){
-    var n=$('falaSim'); if(!n) return;
+    var n=$(id||'falaSim'); if(!n) return;
     var rg=document.createRange(); rg.selectNodeContents(n);
     var sl=window.getSelection(); sl.removeAllRanges(); sl.addRange(rg);
     btn.textContent='Selecione e copie';
@@ -1117,13 +1184,205 @@ $('v-radar').addEventListener('click',function(e){
   if(r){rd.reg=r.getAttribute('data-rd-reg'); renderRadar();}
 });
 
+/* ---------- avaliador de ações ---------- */
+var AVI={
+ pl:{n:'P/L',dir:'low',sc:1,fmt:'x',lab:['Barato','Na média','Caro'],cls:['good','neutral','bad'],dica:'Preço ÷ lucro. Quantos anos de lucro o mercado está pagando pela empresa.',ba:'barato até',bb:'caro a partir de'},
+ ev:{n:'EV/EBITDA',dir:'low',sc:1,fmt:'x',lab:['Barato','Na média','Caro'],cls:['good','neutral','bad'],dica:'Valor da empresa (mercado + dívida líquida) ÷ geração operacional de caixa (EBITDA). Considera a dívida.',ba:'barato até',bb:'caro a partir de'},
+ pvp:{n:'P/VP',dir:'low',sc:1,fmt:'x',lab:['Barato','Na média','Caro'],cls:['good','neutral','bad'],dica:'Preço ÷ patrimônio líquido. Compara o preço com o que a empresa tem registrado em patrimônio.',ba:'barato até',bb:'caro a partir de'},
+ fcf:{n:'Caixa livre sobre o valor de mercado',dir:'high',sc:1,fmt:'%',lab:['Barato','Na média','Caro'],cls:['good','neutral','bad'],dica:'Caixa operacional menos investimentos, como % do valor de mercado. Quanto maior, mais caixa a empresa gera para o preço pago.',ba:'barato a partir de',bb:'caro até'},
+ roe:{n:'ROE',dir:'high',sc:0,fmt:'%',lab:['Alto','Médio','Baixo'],cls:['good','neutral','warn'],dica:'Lucro ÷ patrimônio líquido. Mede a rentabilidade. ROE alto costuma justificar P/VP maior.',ba:'alto a partir de',bb:'baixo até'},
+ alav:{n:'Dívida líquida / EBITDA',dir:'low',sc:0,fmt:'x',lab:['Confortável','Moderada','Alta'],cls:['good','neutral','bad'],dica:'Quantos anos de EBITDA seriam necessários para pagar a dívida líquida.',ba:'confortável até',bb:'alta a partir de'},
+ dy:{n:'Dividend yield',dir:'high',sc:0,fmt:'%',lab:['Alto','Médio','Baixo'],cls:['good','neutral','warn'],dica:'Proventos dos últimos 12 meses ÷ valor de mercado.',ba:'alto a partir de',bb:'baixo até'}
+};
+var AVS=[
+ {k:'geral',nome:'Indústria e serviços (geral)',use:['pl','ev','fcf','pvp','roe','alav','dy'],sc:['pl','ev','fcf'],b:{pl:[8,15],ev:[5,9],fcf:[8,4],pvp:[1.5,3],roe:[15,8],alav:[1.5,3],dy:[6,3]},note:'Referência para empresas sem característica especial.'},
+ {k:'varejo',nome:'Varejo e consumo',use:['pl','ev','fcf','pvp','roe','alav','dy'],sc:['pl','ev','fcf'],w:{fcf:0.5},b:{pl:[10,18],ev:[6,10],fcf:[7,3],pvp:[1.5,3],roe:[15,8],alav:[1.5,3],dy:[5,2]},note:'Aceita múltiplos um pouco maiores. O caixa livre pesa metade, pois oscila com recebíveis e fornecedores.'},
+ {k:'util',nome:'Energia e saneamento',use:['pl','ev','pvp','roe','alav','dy'],sc:['pl','ev'],b:{pl:[9,15],ev:[6,9],pvp:[1.5,2.5],roe:[12,8],alav:[3,4.5],dy:[7,4]},note:'Investimento pesado: o caixa livre costuma ser baixo e por isso não entra na nota.'},
+ {k:'commod',nome:'Mineração, petróleo e commodities',use:['pl','ev','fcf','pvp','roe','alav','dy'],sc:['pl','ev','fcf'],b:{pl:[5,10],ev:[3.5,6],fcf:[10,5],pvp:[1.2,2.5],roe:[15,8],alav:[1.5,2.5],dy:[8,4]},note:'Setor cíclico: múltiplo baixo no pico do ciclo pode enganar, e múltiplo alto no fundo também.'},
+ {k:'banco',nome:'Bancos e seguradoras',use:['pl','pvp','roe','dy'],sc:['pl','pvp'],b:{pl:[7,11],pvp:[1,1.8],roe:[18,12],dy:[6,3]},note:'EBITDA, dívida e caixa livre não se aplicam a bancos, então esses campos ficam ocultos. Vale P/L, P/VP e ROE.'},
+ {k:'imob',nome:'Construção e imobiliário',use:['pl','pvp','ev','roe','alav'],sc:['pl','pvp','ev'],b:{pl:[7,12],pvp:[0.9,1.6],ev:[5,8],roe:[15,8],alav:[2,3.5]},note:'Setor sensível a juros e a ciclo. Compare com o histórico da própria empresa.'}
+];
+var AVK={}; AVS.forEach(function(s){AVK[s.k]=s;});
+function avBench(set,i){var o=(S.av.bench[set]||{})[i]; return (o&&o.length===2)?o:AVK[set].b[i];}
+function avCalc(a){
+  var vm=a.vm,c={};
+  c.ev=null;c.pl=null;c.pvp=null;c.roe=null;c.fcf=null;c.alav=null;c.dy=null;c.fcl=null;c.EV=null;c.conv=null;
+  if(!(vm>0)) return c;
+  c.EV=vm+a.dl;
+  if(a.ll>0) c.pl=vm/a.ll;
+  if(a.ebitda>0){c.ev=c.EV/a.ebitda; c.alav=a.dl/a.ebitda;}
+  if(a.pl>0){c.pvp=vm/a.pl; c.roe=a.ll/a.pl*100;}
+  if(a.fco||a.capex){c.fcl=a.fco-a.capex; c.fcf=c.fcl/vm*100;}
+  if(a.prov>0) c.dy=a.prov/vm*100;
+  if(a.ll>0&&a.fco) c.conv=a.fco/a.ll;
+  return c;
+}
+function avLevel(i,v,bn){
+  var d=AVI[i].dir;
+  if(d==='low') return v<=bn[0]?1:(v>=bn[1]?-1:0);
+  return v>=bn[0]?1:(v<=bn[1]?-1:0);
+}
+function avFmt(i,v){
+  if(v==null) return 'n/d';
+  return AVI[i].fmt==='x'?v.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'x':pc(v);
+}
+function avMeter(i,v,bn){
+  var a=bn[0],b=bn[1],max,z;
+  if(AVI[i].dir==='low'){max=b*1.8; z=[[a,'good'],[b-a,'warn'],[max-b,'bad']];}
+  else{max=a*1.8; z=[[b,'bad'],[a-b,'warn'],[max-a,'good']];}
+  if(!(max>0)) return '';
+  var pos=Math.min(100,Math.max(0,v/max*100));
+  return '<div class="mt"><div class="mz" aria-hidden="true">'+z.map(function(x){return '<i class="'+x[1]+'" style="width:'+(Math.max(0,x[0])/max*100).toFixed(2)+'%"></i>';}).join('')+'</div><b style="left:'+pos.toFixed(1)+'%"></b></div>';
+}
+function avMi(v){
+  var a=Math.abs(v);
+  if(a>=1000) return (v<0?'-':'')+'R$ '+(a/1000).toLocaleString('pt-BR',{maximumFractionDigits:1})+' bi';
+  return 'R$ '+Math.round(v).toLocaleString('pt-BR')+' mi';
+}
+function renderAv(){
+  var a=S.av, st=AVK[a.set]||AVK.geral, c=avCalc(a), h='';
+  $('avEx').hidden=!a.example;
+  $('avSetNote').textContent=st.note;
+  if(!(a.vm>0)){
+    $('avOut').innerHTML='<div class="card"><h2>Avaliador de ações</h2><p class="note" style="margin-top:8px">Informe o preço e o número de ações (ou o valor de mercado) e os números da empresa. O app calcula os múltiplos e compara com as faixas de referência do tipo escolhido.</p></div>';
+    return;
+  }
+  var xs=function(v){return v.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'x';};
+  var atip={};
+  if(c.fcf!=null&&((a.ebitda>0&&a.fco>3*a.ebitda)||c.fcf>30)) atip.fcf='Caixa operacional fora do padrão'+(a.ebitda>0&&a.fco>0?' ('+xs(a.fco/a.ebitda)+' o EBITDA)':'')+'. Provavelmente capital de giro ou erro de digitação. Confira no release. Ficou fora da nota.';
+  if(c.pl!=null&&c.pl>40) atip.pl='Lucro comprimido: P/L acima de 40x não é confiável. Ficou fora da nota.';
+  var rows=[], vals=0, wts=0, nValid=0;
+  st.use.forEach(function(i){
+    var v=c[i], bn=avBench(a.set,i);
+    if(v==null){rows.push({i:i,v:null});return;}
+    var r={i:i,v:v,bn:bn,lv:avLevel(i,v,bn),sc:st.sc.indexOf(i)>=0};
+    if(atip[i]) r.atip=atip[i];
+    else if(r.sc){var w=(st.w&&st.w[i])||1; vals+=r.lv*w; wts+=w; nValid++;}
+    rows.push(r);
+  });
+  var need=Math.min(3,st.sc.length), avg=wts?vals/wts:null;
+  var vlab,vcls,vpos='';
+  if(!nValid){vlab='Dados insuficientes';vcls='warn';}
+  else if(nValid<need){vlab='Sinais mistos';vcls='warn';}
+  else if(avg>=0.34){vlab='Parece barata';vcls='good';vpos='abaixo';}
+  else if(avg<=-0.34){vlab='Parece cara';vcls='bad';vpos='acima';}
+  else {vlab='Preço na média';vcls='neutral';vpos='dentro';}
+  var decisive=!!vpos;
+  var tk=a.ticker||'Empresa';
+  h+='<div class="card"><div class="kpi-label">'+esc(tk)+' · '+esc(st.nome)+'</div><div class="vd"><span class="big">'+vlab+'</span><span class="pill '+(decisive?vcls:'warn')+'">'+nValid+' de '+st.sc.length+' múltiplos válidos</span></div>';
+  h+='<p class="note" style="margin-top:6px">'+(decisive?'Comparado com as faixas de referência editáveis do tipo de empresa. É um sinal para conversar, não recomendação.':'Poucos múltiplos confiáveis: os demais estão sem dado ou distorcidos e ficaram fora da nota. Veja os alertas antes de concluir.')+'</p>';
+  if(decisive){
+    h+='<div class="gauge"><div class="mt"><div class="mz" aria-hidden="true"><i class="good" style="width:33.3%"></i><i class="warn" style="width:33.4%"></i><i class="bad" style="width:33.3%"></i></div><b style="left:'+(((-avg+1)/2)*100).toFixed(1)+'%"></b></div><div class="gl"><span>Barata</span><span>Na média</span><span>Cara</span></div></div>';
+  }
+  h+='<dl class="dl"><div><dt>Valor de mercado</dt><dd>'+avMi(a.vm)+'</dd></div><div><dt>Valor da empresa (EV)</dt><dd>'+avMi(c.EV)+'</dd></div>';
+  if(c.fcl!=null&&st.k!=='banco') h+='<div><dt>Caixa livre (12m)</dt><dd>'+avMi(c.fcl)+'</dd></div>';
+  h+='</dl></div>';
+
+  h+='<div class="card"><h2>Múltiplos</h2><div>';
+  rows.forEach(function(r){
+    var inf=AVI[r.i];
+    if(r.v==null){
+      h+='<div class="ind"><div class="it"><span class="in">'+esc(inf.n)+'</span><span class="pill neutral">Sem dado</span></div><div class="id">Não calculado: faltam dados ou o valor-base é zero ou negativo.</div></div>';
+      return;
+    }
+    var k=r.lv===1?0:r.lv===0?1:2;
+    var faixa=inf.ba+' '+avFmt(r.i,r.bn[0])+' · '+inf.bb+' '+avFmt(r.i,r.bn[1]);
+    var pill=r.atip?'<span class="pill warn">Atípico</span>':'<span class="pill '+inf.cls[k]+'">'+inf.lab[k]+'</span>';
+    var wnote=(r.sc&&st.w&&st.w[r.i])?' <span class="note">(peso reduzido)</span>':'';
+    h+='<div class="ind"><div class="it"><span class="in">'+esc(inf.n)+(r.sc?wnote:' <span class="note">(informativo)</span>')+'</span><span><span class="iv">'+avFmt(r.i,r.v)+'</span> '+pill+'</span></div>'+avMeter(r.i,r.v,r.bn)+'<div class="id">'+(r.atip?'<strong style="color:var(--warn)">'+esc(r.atip)+'</strong> ':'')+esc(inf.dica)+' <span style="white-space:nowrap">Faixa: '+faixa+'.</span></div></div>';
+  });
+  h+='</div></div>';
+
+  var fl=[];
+  if(atip.pl) fl.push('Lucro comprimido: o P/L ('+xs(c.pl)+') ficou fora da nota. O EBITDA não inclui juros e pode esconder o problema quando o lucro é baixo por despesa financeira. Confira a despesa financeira antes de concluir.');
+  if(atip.fcf) fl.push(atip.fcf);
+  if(!(a.ll>0)) fl.push('A empresa não teve lucro nos 12 meses. O P/L não se aplica, avalie por EV/EBITDA e caixa.');
+  if(!(a.ebitda>0)&&st.k!=='banco') fl.push('EBITDA zero ou negativo: EV/EBITDA e endividamento não puderam ser calculados.');
+  if(c.fcl!=null&&c.fcl<0&&st.k!=='banco'&&st.k!=='util') fl.push('Caixa livre negativo: a empresa gastou mais do que gerou. Pode ser fase de investimento, vale entender.');
+  if(c.conv!=null&&c.conv<0.7&&st.k!=='banco') fl.push('O caixa operacional é só '+Math.round(c.conv*100)+'% do lucro. Lucro que não vira caixa merece pergunta.');
+  if(rows.some(function(r){return r.i==='alav'&&r.v!=null&&r.lv===-1;})) fl.push('Endividamento alto para o tipo de empresa. Múltiplo baixo com dívida alta costuma ter motivo.');
+  if(c.dy!=null&&c.dy>15) fl.push('Dividend yield muito alto. Pode incluir provento extraordinário ou refletir preço derrubado, e não se repete necessariamente.');
+  if(st.k==='commod') fl.push('Setor cíclico: avalie o lucro no meio do ciclo, não só nos últimos 12 meses.');
+  if(st.k==='banco') fl.push('Em bancos, ROE alto costuma justificar P/VP maior. Olhe os dois juntos.');
+  if(st.k==='util') fl.push('Empresa de capex pesado: o caixa livre é pouco útil e a análise depende da regulação e da dívida.');
+  if(st.k==='varejo') fl.push('No varejo, o caixa operacional oscila com recebíveis e fornecedores. Por isso o caixa livre pesa metade na nota.');
+  fl.push('Confirme se o lucro é recorrente, sem venda de ativos ou efeitos pontuais, e confira os números no release da empresa.');
+  h+='<div class="card"><h2>Pontos de atenção</h2><ul class="clean" style="margin-top:8px">'+fl.map(function(t){return '<li class="al"><span class="pill warn">Atenção</span><span>'+esc(t)+'</span></li>';}).join('')+'</ul></div>';
+
+  var pr=[]; if(c.pl!=null&&!atip.pl) pr.push('P/L de '+xs(c.pl)); if(c.ev!=null&&st.use.indexOf('ev')>=0) pr.push('EV/EBITDA de '+xs(c.ev)); if(c.pvp!=null&&st.sc.indexOf('pvp')>=0) pr.push('P/VP de '+xs(c.pvp));
+  var f=tk+': pelos dados informados, '+(pr.length?'a empresa negocia a '+pr.join(', ')+'.':'não foi possível calcular múltiplos confiáveis.');
+  if(vpos) f+=' Isso fica '+vpos+' da faixa que usamos como referência para '+st.nome.toLowerCase()+'.';
+  if(c.fcf!=null&&st.k!=='banco'&&!atip.fcf) f+=' O caixa livre dos últimos 12 meses equivale a '+pc(c.fcf)+' do valor de mercado.';
+  f+='\n\nEm termos simples: ';
+  if(vlab==='Parece barata') f+='o mercado está pagando relativamente pouco pelo que a empresa lucra e gera de caixa. Mas barato pode ter motivo, como queda de lucro, dívida ou ciclo do setor. Preço baixo não é garantia de valorização.';
+  else if(vlab==='Parece cara') f+='o mercado já paga um valor alto pelo que a empresa lucra e gera de caixa. Isso pode refletir expectativa de crescimento, mas deixa menos margem para decepção.';
+  else if(vlab==='Preço na média') f+='o preço é compatível com o que a empresa lucra e gera de caixa, sem grande desconto nem prêmio.';
+  else if(vlab==='Sinais mistos') f+='os números disponíveis não permitem uma conclusão segura, porque há dados distorcidos ou faltando. Melhor tratar como ponto de partida para investigar.';
+  else f+='faltam dados para uma leitura confiável.';
+  f+='\n\nPontos de atenção: '+fl.slice(0,3).join(' ');
+  f+='\n\nÉ uma leitura de apoio baseada em múltiplos, não é recomendação de compra ou venda.';
+  h+='<div class="card"><div class="head"><h2>Roteiro de conversa</h2><button class="btn" type="button" data-copy="av">Copiar texto</button></div><pre class="fala" id="falaAv">'+esc(f)+'</pre></div>';
+  $('avOut').innerHTML=h;
+}
+function avRenderBench(){
+  var st=AVK[S.av.set]||AVK.geral, h='';
+  st.use.forEach(function(i){
+    var inf=AVI[i], bn=avBench(S.av.set,i);
+    h+='<div class="benchrow"><span class="lbl">'+esc(inf.n)+'</span><div class="field"><label for="avb_'+i+'_0">'+inf.ba+'</label><input type="number" id="avb_'+i+'_0" data-bi="'+i+'" data-bj="0" step="0.1" inputmode="decimal" value="'+bn[0]+'"></div><div class="field"><label for="avb_'+i+'_1">'+inf.bb+'</label><input type="number" id="avb_'+i+'_1" data-bi="'+i+'" data-bj="1" step="0.1" inputmode="decimal" value="'+bn[1]+'"></div></div>';
+  });
+  $('avBench').innerHTML=h;
+}
+function bindAv(){
+  var a=S.av;
+  $('avSet').innerHTML=AVS.map(function(s){return '<option value="'+s.k+'">'+esc(s.nome)+'</option>';}).join('');
+  var F={avVM:'vm',avLL:'ll',avEBITDA:'ebitda',avDL:'dl',avFCO:'fco',avCapex:'capex',avPL:'pl',avProv:'prov',avPreco:'preco',avAcoes:'acoes'};
+  function fill(){
+    $('avTicker').value=a.ticker||''; $('avSet').value=a.set;
+    Object.keys(F).forEach(function(id){var v=a[F[id]]; $(id).value=v?v:'';});
+  }
+  function avSync(){
+    var bank=a.set==='banco';
+    $('avRowEb').hidden=bank; $('avAdv').hidden=bank; $('avDLnote').hidden=bank;
+    var ro=(a.preco>0&&a.acoes>0); $('avVM').readOnly=ro;
+    $('avVMlbl').textContent=ro?'Valor de mercado (preço × ações)':'Valor de mercado';
+    if(a.fco||a.capex) $('avAdv').open=true;
+  }
+  fill(); avRenderBench(); avSync();
+  function touch(){a.example=false; avSync(); save(); renderAv();}
+  Object.keys(F).forEach(function(id){
+    $(id).addEventListener('input',function(){
+      a[F[id]]=num($(id));
+      if(id==='avPreco'||id==='avAcoes'){
+        if(a.preco>0&&a.acoes>0){a.vm=Math.round(a.preco*a.acoes*10)/10; $('avVM').value=a.vm;}
+      }
+      touch();
+    });
+  });
+  $('avTicker').addEventListener('input',function(){a.ticker=$('avTicker').value.toUpperCase().replace(/[^A-Z0-9]/g,''); touch();});
+  $('avSet').addEventListener('change',function(){a.set=$('avSet').value; avRenderBench(); touch();});
+  $('avBench').addEventListener('input',function(e){
+    var t=e.target; if(!t.getAttribute('data-bi')) return;
+    var i=t.getAttribute('data-bi'), cur=avBench(a.set,i).slice(), j=parseInt(t.getAttribute('data-bj'),10);
+    var v=parseFloat(t.value); if(!isFinite(v)) return;
+    cur[j]=v; a.bench[a.set]=a.bench[a.set]||{}; a.bench[a.set][i]=cur; save(); renderAv();
+  });
+  $('avBenchReset').addEventListener('click',function(){delete a.bench[a.set]; save(); avRenderBench(); renderAv();});
+  $('avBlank').addEventListener('click',function(){
+    var s=a.set; S.av={ticker:'',set:s,preco:0,acoes:0,vm:0,ll:0,ebitda:0,dl:0,fco:0,capex:0,pl:0,prov:0,bench:a.bench,example:false};
+    a=S.av; fill(); avSync(); save(); renderAv();
+  });
+  $('avOut').addEventListener('click',function(e){
+    var b=e.target.closest('[data-copy]'); if(b) copyText($('falaAv').textContent,b,'falaAv');
+  });
+}
+
 /* ---------- geral ---------- */
 function renderAll(){
   CL.forEach(function(c){var el=$('pr_'+c.k); if(el) el.textContent=pc(rateOf(c.k));});
   renderSim(); renderFicha();
 }
 function route(){
-  var names=['radar','simulador','ficha','ativos'], h=(location.hash||'#radar').slice(1);
+  var names=['radar','simulador','ficha','avaliador','ativos'], h=(location.hash||'#radar').slice(1);
   var v=names.indexOf(h)>=0?h:'radar';
   names.forEach(function(n){
     $('v-'+n).hidden=(n!==v);
@@ -1132,7 +1391,7 @@ function route(){
   });
 }
 window.addEventListener('hashchange',route);
-renderPrem(); bindSim(); bindFicha(); renderAtivos(); renderAll(); renderRadar(); route();
+renderPrem(); bindSim(); bindFicha(); renderAtivos(); renderAll(); bindAv(); renderAv(); renderRadar(); route();
 if(!(window.claude&&window.claude.use)){ $('aiCard').hidden=true; }
 fetch('dados.json?'+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok) throw 0; return r.json();}).then(function(d){ if(d&&d.news&&d.ref&&d.cal){RADAR=d; renderRadar();} }).catch(function(){});
 })();
